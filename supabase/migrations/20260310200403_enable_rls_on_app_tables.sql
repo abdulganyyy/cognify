@@ -1,0 +1,10 @@
+alter table public.profiles enable row level security;
+alter table public.documents enable row level security;
+alter table public.document_sections enable row level security;
+alter table public.document_summaries enable row level security;
+alter table public.document_topics enable row level security;
+alter table public.flashcards enable row level security;
+alter table public.chat_sessions enable row level security;
+alter table public.chat_messages enable row level security;
+alter table public.bookmarks enable row level security;
+alter table public.activity_logs enable row level security;
