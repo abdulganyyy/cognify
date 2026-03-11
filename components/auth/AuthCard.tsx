@@ -1,58 +1,61 @@
-import type { ReactNode } from "react"
-import Link from "next/link"
+import { cn } from "@/lib/utils/cn";
 
 interface AuthCardProps {
-  eyebrow?: string
-  title: string
-  description?: string
-  children: ReactNode
-  footerText?: string
-  footerLinkLabel?: string
-  footerLinkHref?: string
+  children: React.ReactNode;
+  className?: string;
 }
 
-export function AuthCard({
-  eyebrow,
-  title,
-  description,
-  children,
-  footerText,
-  footerLinkLabel,
-  footerLinkHref,
-}: AuthCardProps) {
+/**
+ * AuthCard
+ *
+ * Reusable centered card wrapper untuk semua halaman auth:
+ * login, register, forgot-password, reset-password.
+ *
+ * Background menggunakan dot-grid pattern yang sama dengan landing page
+ * untuk konsistensi visual Cognify.
+ *
+ * @example
+ * // app/(auth)/login/page.tsx
+ * <AuthCard>
+ *   <LoginForm onSubmit={...} />
+ * </AuthCard>
+ *
+ * // app/(auth)/register/page.tsx
+ * <AuthCard>
+ *   <RegisterForm onSubmit={...} />
+ * </AuthCard>
+ */
+export function AuthCard({ children, className }: AuthCardProps) {
   return (
-    <div className="rounded-3xl border border-border/60 bg-background p-6 shadow-sm sm:p-8">
-      <div className="space-y-2">
-        {eyebrow ? (
-          <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-            {eyebrow}
-          </p>
-        ) : null}
-
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          {title}
-        </h1>
-
-        {description ? (
-          <p className="text-sm leading-6 text-muted-foreground">
-            {description}
-          </p>
-        ) : null}
+    <div
+      className="flex min-h-screen items-center justify-center px-4 py-12"
+      style={{
+        backgroundImage:
+          "radial-gradient(circle, #e5e7eb 1px, transparent 1px)",
+        backgroundSize: "24px 24px",
+        backgroundColor: "#FAFAFA",
+      }}
+    >
+      {/* Vignette fade from edges */}
+      <div className="pointer-events-none fixed inset-0">
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#FAFAFA] to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#FAFAFA] to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#FAFAFA] to-transparent" />
+        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#FAFAFA] to-transparent" />
       </div>
 
-      <div className="mt-6">{children}</div>
-
-      {footerText && footerLinkLabel && footerLinkHref ? (
-        <div className="mt-6 text-center text-sm text-muted-foreground">
-          {footerText}{" "}
-          <Link
-            href={footerLinkHref}
-            className="font-medium text-primary transition-opacity hover:opacity-80"
-          >
-            {footerLinkLabel}
-          </Link>
-        </div>
-      ) : null}
+      {/* Card */}
+      <div
+        className={cn(
+          "relative w-full max-w-[400px]",
+          "rounded-2xl border border-neutral-200/80 bg-white",
+          "px-8 py-10",
+          "shadow-xl shadow-neutral-200/50",
+          className
+        )}
+      >
+        {children}
+      </div>
     </div>
-  )
+  );
 }
