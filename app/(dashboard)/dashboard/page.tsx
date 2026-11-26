@@ -15,6 +15,12 @@ import { RecentDocuments } from "./_sections/RecentDocument";
 import { UploadCtaCard } from "./_sections/UploadCtaCard";
 import type { BookmarkedItem, Document, LearningSession } from "./types";
 
+function getBookmarkHref(item: BookmarkedItem): string {
+  if (item.type === "topic") return `/documents/${item.documentId}?tab=topics`;
+  if (item.type === "flashcard") return `/documents/${item.documentId}?tab=flashcards`;
+  return `/documents/${item.documentId}`;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const { openUploadModal } = useUploadModal();
@@ -103,7 +109,6 @@ export default function DashboardPage() {
         <DashboardGreeting
           user={user}
           documentCount={allDocuments.length}
-          onUploadClick={openUploadModal}
         />
 
         {hasDocuments && <DashboardSearch onSearch={setSearchQuery} />}
@@ -117,7 +122,9 @@ export default function DashboardPage() {
             {!searchQuery && sessions.length > 0 && (
               <ContinueLearning
                 sessions={sessions}
-                onContinue={(documentId) => router.push(`/documents/${documentId}`)}
+                onContinue={(documentId, lastSection) =>
+                  router.push(`/documents/${documentId}?tab=${lastSection}`)
+                }
               />
             )}
 
@@ -141,7 +148,7 @@ export default function DashboardPage() {
             {!searchQuery && bookmarks.length > 0 && (
               <QuickBookmarks
                 items={bookmarks}
-                onItemClick={(item) => router.push(`/documents/${item.documentId}`)}
+                onItemClick={(item) => router.push(getBookmarkHref(item))}
                 onViewAll={() => router.push("/bookmarks")}
               />
             )}

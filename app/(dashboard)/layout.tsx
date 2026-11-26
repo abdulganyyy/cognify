@@ -12,7 +12,7 @@ import { useDashboardQuery } from "@/lib/query/hooks";
 import { formatRelativeTime } from "@/lib/utils/dates";
 
 function getPageTitle(pathname: string): string {
-  if (pathname.startsWith("/documents/")) return "Ruang Belajar Dokumen";
+  if (pathname.startsWith("/documents/")) return "Ruang Belajar";
   if (pathname.startsWith("/documents")) return "Dokumen Saya";
   if (pathname.startsWith("/bookmarks")) return "Bookmark";
   return "Beranda";

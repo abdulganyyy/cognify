@@ -38,10 +38,7 @@ export function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1
-            className="mb-6 text-5xl font-normal leading-tight tracking-tight text-neutral-900 md:text-6xl lg:text-7xl"
-            style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
-          >
+          <h1 className="mb-6 font-serif text-5xl font-normal leading-tight tracking-tight text-neutral-900 md:text-6xl lg:text-7xl">
             Ubah setiap PDF menjadi{" "}
             <span className="italic text-blue-600">pengetahuan aktif</span>
           </h1>
@@ -84,12 +81,6 @@ export function HeroSection() {
           </p>
         </div>
       </div>
-
-      {/* Google Font import via style tag — pragmatis untuk landing page */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
-        body { font-family: 'DM Sans', system-ui, sans-serif; }
-      `}</style>
     </section>
   );
 }

@@ -150,7 +150,7 @@ export function MobileSidebar({
               <p className="px-2 py-3 text-xs text-neutral-400 text-center leading-relaxed">
                 Belum ada dokumen.
                 <br />
-                Upload PDF pertamamu.
+                Unggah PDF pertamamu.
               </p>
             ) : (
               documents.map((doc) => (

@@ -14,16 +14,8 @@ interface PageHeaderProps {
 /**
  * PageHeader
  *
- * Digunakan di bagian paling atas setiap halaman.
+ * Header halaman yang menyatu langsung dengan kanvas konten (tanpa box bertumpuk di bawah AppTopbar).
  * Layout: eyebrow (opsional) → title + description | actions
- *
- * @example
- * <PageHeader
- *   eyebrow={<Breadcrumb />}
- *   title="Documents"
- *   description="Semua PDF yang sudah kamu upload."
- *   actions={<Button size="sm">Upload PDF</Button>}
- * />
  */
 export function PageHeader({
   title,
@@ -35,32 +27,31 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "border-b border-neutral-100 bg-white px-6 py-5",
+        "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
         className
       )}
     >
-      {eyebrow && (
-        <div className="mb-2 text-xs font-medium text-neutral-400 tracking-wide">
-          {eyebrow}
-        </div>
-      )}
-
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h1 className="text-xl font-semibold text-neutral-900 leading-tight tracking-tight">
-            {title}
-          </h1>
-          {description && (
-            <p className="mt-1 text-sm text-neutral-500 leading-relaxed max-w-xl">
-              {description}
-            </p>
-          )}
-        </div>
-
-        {actions && (
-          <div className="flex shrink-0 items-center gap-2">{actions}</div>
+      <div className="min-w-0">
+        {eyebrow && (
+          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-widest text-neutral-400">
+            {eyebrow}
+          </div>
+        )}
+        <h1 className="text-xl font-semibold leading-tight tracking-tight text-neutral-900">
+          {title}
+        </h1>
+        {description && (
+          <p className="mt-1 max-w-xl text-sm leading-relaxed text-neutral-500">
+            {description}
+          </p>
         )}
       </div>
+
+      {actions && (
+        <div className="flex shrink-0 items-center gap-2 self-start sm:self-auto">
+          {actions}
+        </div>
+      )}
     </div>
   );
 }

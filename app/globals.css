@@ -4,25 +4,25 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222 24% 12%;
+    --foreground: 0 0% 9%;
     --card: 0 0% 100%;
-    --card-foreground: 222 24% 12%;
+    --card-foreground: 0 0% 9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 24% 12%;
-    --primary: 214 84% 56%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 222 24% 18%;
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 16% 45%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 24% 18%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 214 100% 97%;
+    --accent-foreground: 224 76% 48%;
     --destructive: 0 72% 56%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214 20% 90%;
-    --input: 214 20% 90%;
-    --ring: 214 84% 56%;
-    --radius: 0.9rem;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 92%;
+    --input: 0 0% 90%;
+    --ring: 221 83% 53%;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -32,7 +32,7 @@
     --card-foreground: 210 40% 96%;
     --popover: 222 24% 12%;
     --popover-foreground: 210 40% 96%;
-    --primary: 214 84% 64%;
+    --primary: 217 91% 60%;
     --primary-foreground: 222 47% 11%;
     --secondary: 217 22% 18%;
     --secondary-foreground: 210 40% 96%;
@@ -44,10 +44,12 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217 18% 22%;
     --input: 217 18% 22%;
-    --ring: 214 84% 64%;
+    --ring: 217 91% 60%;
   }
 
   @theme inline {
+    --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+    --font-serif: var(--font-dm-serif), Georgia, serif;
     --color-background: hsl(var(--background));
     --color-foreground: hsl(var(--foreground));
     --color-card: hsl(var(--card));
@@ -82,23 +84,7 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
-  }
-
-  h1 {
-    @apply text-3xl font-semibold tracking-tight;
-  }
-
-  h2 {
-    @apply text-2xl font-semibold tracking-tight;
-  }
-
-  h3 {
-    @apply text-xl font-semibold tracking-tight;
-  }
-
-  p {
-    @apply leading-7;
   }
 }

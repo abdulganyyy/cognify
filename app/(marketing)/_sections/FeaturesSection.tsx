@@ -57,10 +57,7 @@ export function FeaturesSection() {
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-400">
             Fitur Utama
           </p>
-          <h2
-            className="mb-4 text-4xl font-normal text-neutral-900 leading-snug"
-            style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
-          >
+          <h2 className="mb-4 font-serif text-4xl font-normal text-neutral-900 leading-snug">
             Empat alat. Satu dokumen.{" "}
             <span className="italic text-blue-600">Semua yang kamu butuhkan.</span>
           </h2>

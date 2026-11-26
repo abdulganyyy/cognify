@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink, FileText, MoreHorizontal, RefreshCw, Trash2 } from "lucide-react";
+import {
+  ChevronRight,
+  ExternalLink,
+  FileText,
+  MoreHorizontal,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -62,123 +69,135 @@ export function DocumentCard({
   actionSlot,
 }: DocumentCardProps) {
   const documentHref = href ?? `/documents/${id}`;
+  const isReady = status === "ready";
 
   return (
     <article
       className={cn(
-        "group rounded-2xl border border-border/60 bg-background p-5 shadow-sm transition-all hover:border-border hover:shadow-md",
+        "group flex flex-col justify-between rounded-xl border border-neutral-100 bg-white p-4",
+        "transition-all duration-150 hover:border-neutral-200 hover:shadow-md hover:shadow-neutral-100/80",
         className
       )}
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex min-w-0 items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border/70 bg-muted/40 text-muted-foreground">
-            <FileText className="h-5 w-5" />
-          </div>
-
-          <div className="min-w-0 space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge status={status} />
+      <div>
+        {/* Top row */}
+        <div className="flex items-start justify-between gap-2.5">
+          <div className="flex min-w-0 items-start gap-2.5">
+            <div
+              className={cn(
+                "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg",
+                isReady ? "bg-blue-50 text-blue-500" : "bg-neutral-100 text-neutral-400"
+              )}
+            >
+              <FileText className="h-3.5 w-3.5" />
             </div>
 
-            <div className="space-y-1">
+            <div className="min-w-0">
               <Link
                 href={documentHref}
-                className="line-clamp-1 text-base font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
+                className="line-clamp-1 text-sm font-medium leading-snug text-neutral-800 transition-colors hover:text-blue-600"
               >
                 {title}
               </Link>
-
-              {description ? (
-                <p className="line-clamp-2 text-sm leading-6 text-muted-foreground">
-                  {description}
-                </p>
-              ) : null}
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <StatusBadge status={status} />
+                {typeof pageCount === "number" && (
+                  <span className="text-[11px] text-neutral-400">
+                    {pageCount} hal
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <BookmarkButton
-            isBookmarked={bookmarked}
-            onToggle={onBookmarkToggle ? () => onBookmarkToggle() : undefined}
-          />
+          <div className="flex shrink-0 items-center gap-0.5">
+            <BookmarkButton
+              size="sm"
+              isBookmarked={bookmarked}
+              onToggle={onBookmarkToggle ? () => onBookmarkToggle() : undefined}
+            />
 
-          {actionSlot ?? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-xl text-muted-foreground hover:bg-accent hover:text-foreground"
-                  aria-label="Aksi dokumen"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-44 text-xs">
-                <DropdownMenuItem asChild className="cursor-pointer gap-2">
-                  <Link href={documentHref}>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    Buka Dokumen
-                  </Link>
-                </DropdownMenuItem>
-                {onRetryProcess && (
-                  <DropdownMenuItem
-                    onClick={onRetryProcess}
-                    className="cursor-pointer gap-2"
+            {actionSlot ?? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    className="h-7 w-7 rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
+                    aria-label="Aksi dokumen"
                   >
-                    <RefreshCw className="h-3.5 w-3.5" />
-                    Proses Ulang
+                    <MoreHorizontal className="h-3.5 w-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44 text-xs">
+                  <DropdownMenuItem asChild className="cursor-pointer gap-2">
+                    <Link href={documentHref}>
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Buka Dokumen
+                    </Link>
                   </DropdownMenuItem>
-                )}
-                {onDelete && (
-                  <>
-                    <DropdownMenuSeparator />
+                  {onRetryProcess && (
                     <DropdownMenuItem
-                      onClick={onDelete}
-                      className="cursor-pointer gap-2 text-red-600 focus:bg-red-50 focus:text-red-700"
+                      onClick={onRetryProcess}
+                      className="cursor-pointer gap-2"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      Hapus Dokumen
+                      <RefreshCw className="h-3.5 w-3.5" />
+                      Proses Ulang
                     </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+                  )}
+                  {onDelete && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={onDelete}
+                        className="cursor-pointer gap-2 text-red-600 focus:bg-red-50 focus:text-red-700"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Hapus Dokumen
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-5 space-y-4">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-          {updatedAt ? <span>Diperbarui {updatedAt}</span> : null}
-          {typeof pageCount === "number" ? <span>{pageCount} halaman</span> : null}
-        </div>
+        {/* Summary / File Info */}
+        {description && (
+          <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-neutral-500">
+            {description}
+          </p>
+        )}
 
-        {topics.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
+        {/* Topic chips */}
+        {topics.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
             {topics.slice(0, 3).map((topic) => (
-              <TopicTag key={topic.id} label={topic.label} />
+              <TopicTag key={topic.id} label={topic.label} variant="subtle" />
             ))}
-
-            {topics.length > 3 ? (
-              <span className="inline-flex items-center rounded-full border border-border bg-background px-3 py-1.5 text-sm text-muted-foreground">
+            {topics.length > 3 && (
+              <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-0.5 text-xs font-medium leading-none text-neutral-500">
                 +{topics.length - 3} lainnya
               </span>
-            ) : null}
+            )}
           </div>
-        ) : null}
+        )}
+      </div>
 
-        <div className="pt-1">
-          <Link
-            href={documentHref}
-            className="inline-flex items-center text-sm font-medium text-primary transition-opacity hover:opacity-80"
-          >
-            Lihat detail
-          </Link>
-        </div>
+      {/* Footer */}
+      <div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-2.5">
+        <span className="text-[11px] text-neutral-400">
+          {updatedAt ? `Diperbarui ${updatedAt}` : ""}
+        </span>
+        <Link
+          href={documentHref}
+          className="inline-flex items-center gap-0.5 text-[11px] font-medium text-blue-600 transition-colors hover:text-blue-700"
+        >
+          Buka
+          <ChevronRight className="h-3 w-3" />
+        </Link>
       </div>
     </article>
   );

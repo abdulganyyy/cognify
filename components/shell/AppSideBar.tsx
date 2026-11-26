@@ -1,6 +1,7 @@
 "use client";
 
-import { BookOpen, Upload, Bookmark, LayoutDashboard, FileText } from "lucide-react";
+import { useMemo, useState } from "react";
+import { BookOpen, Upload, Bookmark, LayoutDashboard, FileText, Search, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
@@ -43,6 +44,13 @@ export function AppSidebar({
   onSignOut,
 }: AppSidebarProps) {
   const pathname = usePathname();
+  const [sidebarQuery, setSidebarQuery] = useState("");
+
+  const filteredDocuments = useMemo(() => {
+    const q = sidebarQuery.trim().toLowerCase();
+    if (!q) return documents;
+    return documents.filter((doc) => doc.title.toLowerCase().includes(q));
+  }, [documents, sidebarQuery]);
 
   return (
     <div
@@ -106,12 +114,37 @@ export function AppSidebar({
       <Separator className="mx-3 my-2 w-auto" />
 
       {/* ── Document List ──────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-4 pb-1">
+      <div className="flex items-center justify-between px-4 pb-1.5">
         <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400">
           Dokumen
         </span>
         <span className="text-[10px] text-neutral-400">{documents.length}</span>
       </div>
+
+      {documents.length > 6 && (
+        <div className="px-3 pb-2">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-neutral-400" />
+            <input
+              type="text"
+              value={sidebarQuery}
+              onChange={(e) => setSidebarQuery(e.target.value)}
+              placeholder="Filter dokumen…"
+              className="h-7 w-full rounded-lg border border-neutral-200 bg-neutral-50/70 pl-7 pr-6 text-[11px] text-neutral-700 placeholder:text-neutral-400 outline-none transition-colors focus:border-blue-300 focus:bg-white"
+            />
+            {sidebarQuery && (
+              <button
+                type="button"
+                onClick={() => setSidebarQuery("")}
+                aria-label="Hapus filter"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <ScrollArea className="flex-1 px-3">
         <div className="space-y-0.5 pb-2">
@@ -119,10 +152,14 @@ export function AppSidebar({
             <p className="px-2 py-3 text-xs text-neutral-400 text-center leading-relaxed">
               Belum ada dokumen.
               <br />
-              Upload PDF pertamamu.
+              Unggah PDF pertamamu.
+            </p>
+          ) : filteredDocuments.length === 0 ? (
+            <p className="px-2 py-3 text-[11px] text-neutral-400 text-center">
+              Dokumen tidak ditemukan.
             </p>
           ) : (
-            documents.map((doc) => (
+            filteredDocuments.map((doc) => (
               <SidebarDocumentItem
                 key={doc.id}
                 document={doc}

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { RegisterForm } from "@/components/auth/RegisterForm";
+import { formatAuthErrorMessage } from "@/lib/auth/errors";
 import { createClient } from "@/lib/supabase/browser";
 
 type RegisterFormValues = {
@@ -11,6 +13,7 @@ type RegisterFormValues = {
 };
 
 export function RegisterFormClient() {
+  const router = useRouter();
   const supabase = createClient();
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -24,7 +27,7 @@ export function RegisterFormClient() {
     const origin =
       typeof window !== "undefined" ? window.location.origin : "";
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -36,7 +39,13 @@ export function RegisterFormClient() {
     });
 
     if (error) {
-      throw new Error(error.message);
+      throw new Error(formatAuthErrorMessage(error.message));
+    }
+
+    if (data.session) {
+      router.push("/dashboard");
+      router.refresh();
+      return;
     }
 
     setSuccessMessage(

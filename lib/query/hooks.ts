@@ -291,6 +291,54 @@ export function useDeleteFlashcardMutation(documentId: string) {
   });
 }
 
+export function useUpdateFlashcardMutation(documentId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      flashcardId,
+      ...payload
+    }: {
+      flashcardId: string;
+      question: string;
+      answer: string;
+      difficulty: "easy" | "medium" | "hard";
+    }) =>
+      apiFetch(`/api/documents/${documentId}/flashcards/${flashcardId}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      }),
+    onSuccess: (_data, variables) => {
+      toast.success("Flashcard berhasil diperbarui.");
+      queryClient.setQueryData<DocumentDetailResponse>(
+        queryKeys.documentDetail(documentId),
+        (prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            document: {
+              ...prev.document,
+              flashcards: prev.document.flashcards.map((card) =>
+                card.id === variables.flashcardId
+                  ? {
+                      ...card,
+                      question: variables.question,
+                      answer: variables.answer,
+                      difficulty: variables.difficulty,
+                    }
+                  : card
+              ),
+            },
+          };
+        }
+      );
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.documentDetail(documentId),
+      });
+    },
+    onError: (err: Error) => toast.error(err.message),
+  });
+}
+
 export function useDocumentChatQuery(documentId: string, enabled = true) {
   return useQuery({
     queryKey: queryKeys.documentChat(documentId),

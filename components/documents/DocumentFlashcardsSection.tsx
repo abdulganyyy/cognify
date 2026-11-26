@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   CreditCard,
   Loader2,
+  Pencil,
   Plus,
   RefreshCw,
   RotateCw,
@@ -31,6 +32,7 @@ import {
   useDeleteFlashcardMutation,
   useRegenerateFlashcardsMutation,
   useToggleBookmarkMutation,
+  useUpdateFlashcardMutation,
 } from "@/lib/query/hooks";
 import { cn } from "@/lib/utils/cn";
 import type { DocumentDetail } from "@/types/domain";
@@ -41,40 +43,149 @@ interface DocumentFlashcardsSectionProps {
   isProcessing?: boolean;
 }
 
-const DIFFICULTY_LABEL: Record<string, { label: string; className: string }> = {
+type FlashcardDifficulty = "easy" | "medium" | "hard";
+type DifficultyFilter = "all" | FlashcardDifficulty;
+
+const DIFFICULTY_OPTIONS: readonly FlashcardDifficulty[] = ["easy", "medium", "hard"];
+
+const DIFFICULTY_LABEL: Record<FlashcardDifficulty, { label: string; className: string }> = {
   easy: { label: "Mudah", className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
   medium: { label: "Sedang", className: "bg-amber-50 text-amber-700 border-amber-200" },
   hard: { label: "Sulit", className: "bg-red-50 text-red-700 border-red-200" },
 };
+
+const FILTER_LABELS: Record<DifficultyFilter, string> = {
+  all: "Semua",
+  easy: "Mudah",
+  medium: "Sedang",
+  hard: "Sulit",
+};
+
+function DifficultySelector({
+  value,
+  onChange,
+}: {
+  value: FlashcardDifficulty;
+  onChange: (next: FlashcardDifficulty) => void;
+}) {
+  return (
+    <div className="flex gap-2">
+      {DIFFICULTY_OPTIONS.map((lvl) => (
+        <Button
+          key={lvl}
+          type="button"
+          size="sm"
+          variant={value === lvl ? "default" : "outline"}
+          onClick={() => onChange(lvl)}
+        >
+          {DIFFICULTY_LABEL[lvl].label}
+        </Button>
+      ))}
+    </div>
+  );
+}
 
 export function DocumentFlashcardsSection({
   documentId,
   flashcards,
   isProcessing = false,
 }: DocumentFlashcardsSectionProps) {
+  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>("all");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+
   const [createOpen, setCreateOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("medium");
+  const [difficulty, setDifficulty] = useState<FlashcardDifficulty>("medium");
+
+  const [editingCard, setEditingCard] = useState<DocumentDetail["flashcards"][number] | null>(
+    null
+  );
+  const [editQuestion, setEditQuestion] = useState("");
+  const [editAnswer, setEditAnswer] = useState("");
+  const [editDifficulty, setEditDifficulty] = useState<FlashcardDifficulty>("medium");
+
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
   const createMutation = useCreateFlashcardMutation(documentId);
+  const updateMutation = useUpdateFlashcardMutation(documentId);
   const regenerateMutation = useRegenerateFlashcardsMutation(documentId);
   const deleteMutation = useDeleteFlashcardMutation(documentId);
   const bookmarkMutation = useToggleBookmarkMutation();
 
-  const safeIndex = flashcards.length > 0 ? Math.min(currentIndex, flashcards.length - 1) : 0;
-  const activeCard = flashcards[safeIndex];
+  const filteredFlashcards =
+    difficultyFilter === "all"
+      ? flashcards
+      : flashcards.filter((card) => card.difficulty === difficultyFilter);
+
+  const safeIndex =
+    filteredFlashcards.length > 0
+      ? Math.min(currentIndex, filteredFlashcards.length - 1)
+      : 0;
+  const activeCard = filteredFlashcards[safeIndex];
+
+  useEffect(() => {
+    if (
+      filteredFlashcards.length === 0 ||
+      createOpen ||
+      Boolean(editingCard) ||
+      Boolean(deleteTargetId)
+    ) {
+      return;
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setFlipped(false);
+        setCurrentIndex((prev) =>
+          prev > 0 ? prev - 1 : filteredFlashcards.length - 1
+        );
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setFlipped(false);
+        setCurrentIndex((prev) =>
+          prev < filteredFlashcards.length - 1 ? prev + 1 : 0
+        );
+      } else if (e.key === " ") {
+        e.preventDefault();
+        setFlipped((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [filteredFlashcards.length, createOpen, editingCard, deleteTargetId]);
+
+  const handleFilterChange = (nextFilter: DifficultyFilter) => {
+    setDifficultyFilter(nextFilter);
+    setCurrentIndex(0);
+    setFlipped(false);
+  };
 
   const handlePrev = () => {
     setFlipped(false);
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : flashcards.length - 1));
+    setCurrentIndex((prev) =>
+      prev > 0 ? prev - 1 : filteredFlashcards.length - 1
+    );
   };
 
   const handleNext = () => {
     setFlipped(false);
-    setCurrentIndex((prev) => (prev < flashcards.length - 1 ? prev + 1 : 0));
+    setCurrentIndex((prev) =>
+      prev < filteredFlashcards.length - 1 ? prev + 1 : 0
+    );
   };
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -91,35 +202,68 @@ export function DocumentFlashcardsSection({
     setCreateOpen(false);
   };
 
+  const openEditModal = (card: DocumentDetail["flashcards"][number]) => {
+    setEditingCard(card);
+    setEditQuestion(card.question);
+    setEditAnswer(card.answer);
+    setEditDifficulty(
+      card.difficulty === "easy" || card.difficulty === "hard"
+        ? card.difficulty
+        : "medium"
+    );
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCard || !editQuestion.trim() || !editAnswer.trim()) return;
+    await updateMutation.mutateAsync({
+      flashcardId: editingCard.id,
+      question: editQuestion.trim(),
+      answer: editAnswer.trim(),
+      difficulty: editDifficulty,
+    });
+    setEditingCard(null);
+  };
+
+  const difficultyCounts: Record<DifficultyFilter, number> = {
+    all: flashcards.length,
+    easy: flashcards.filter((c) => c.difficulty === "easy").length,
+    medium: flashcards.filter((c) => c.difficulty === "medium").length,
+    hard: flashcards.filter((c) => c.difficulty === "hard").length,
+  };
+
   return (
-    <section className="rounded-2xl border border-border/60 bg-background p-5 shadow-sm sm:p-6">
+    <section className="rounded-xl border border-neutral-100 bg-white p-5">
       <SectionHeader
+        variant="label"
+        icon={<CreditCard className="h-3.5 w-3.5 text-blue-500" />}
         title={`Flashcards (${flashcards.length})`}
         description="Latih ingatan aktif dengan kartu tanya jawab dari dokumenmu."
+        className="mb-4"
         trailing={
           <div className="flex flex-wrap items-center gap-2">
             <Button
               type="button"
               variant="outline"
-              size="sm"
+              size="xs"
               onClick={() => setCreateOpen(true)}
-              className="gap-1.5"
+              className="h-7 gap-1.5 rounded-lg border-neutral-200 bg-white px-2.5 text-[11px] text-neutral-600 hover:bg-neutral-50"
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-3 w-3" />
               Tambah Kartu
             </Button>
             <Button
               type="button"
               variant="outline"
-              size="sm"
+              size="xs"
               disabled={isProcessing || regenerateMutation.isPending}
               onClick={() => regenerateMutation.mutate()}
-              className="gap-1.5"
+              className="h-7 gap-1.5 rounded-lg border-neutral-200 bg-white px-2.5 text-[11px] text-neutral-600 hover:bg-neutral-50"
             >
               {regenerateMutation.isPending ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <Loader2 className="h-3 w-3 animate-spin" />
               ) : (
-                <RefreshCw className="h-3.5 w-3.5" />
+                <RefreshCw className="h-3 w-3" />
               )}
               Buat Ulang AI
             </Button>
@@ -127,13 +271,61 @@ export function DocumentFlashcardsSection({
         }
       />
 
-      <div className="mt-5">
+      {flashcards.length > 0 && (
+        <div
+          className="mb-4 flex flex-wrap items-center gap-1.5"
+          role="group"
+          aria-label="Filter tingkat kesulitan flashcard"
+        >
+          {(["all", "easy", "medium", "hard"] as const).map((filterKey) => {
+            const active = difficultyFilter === filterKey;
+            return (
+              <button
+                key={filterKey}
+                type="button"
+                aria-pressed={active}
+                onClick={() => handleFilterChange(filterKey)}
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors",
+                  active
+                    ? "border-blue-200 bg-blue-50 text-blue-700"
+                    : "border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50"
+                )}
+              >
+                <span>{FILTER_LABELS[filterKey]}</span>
+                <span className={cn("text-[11px]", active ? "text-blue-500" : "text-neutral-400")}>
+                  ({difficultyCounts[filterKey]})
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div>
         {flashcards.length === 0 ? (
           <EmptyState
             className="min-h-[240px]"
             icon={<CreditCard className="h-5 w-5 text-blue-500" />}
             title="Flashcard belum tersedia"
             description="Flashcard akan dibuat otomatis setelah dokumen selesai diproses, atau kamu bisa membuatnya secara manual."
+          />
+        ) : filteredFlashcards.length === 0 ? (
+          <EmptyState
+            className="min-h-[220px]"
+            icon={<CreditCard className="h-5 w-5 text-blue-500" />}
+            title={`Tidak ada flashcard tingkat ${FILTER_LABELS[difficultyFilter]}`}
+            description="Belum ada kartu pada tingkat kesulitan ini. Pilih filter lain atau tampilkan semua kartu."
+            action={
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => handleFilterChange("all")}
+              >
+                Tampilkan Semua
+              </Button>
+            }
           />
         ) : (
           <div className="space-y-6">
@@ -142,18 +334,18 @@ export function DocumentFlashcardsSection({
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>
-                    Kartu {safeIndex + 1} dari {flashcards.length}
+                    Kartu {safeIndex + 1} dari {filteredFlashcards.length}
                   </span>
-                  <div className="flex items-center gap-2">
-                    {activeCard.difficulty && DIFFICULTY_LABEL[activeCard.difficulty] && (
+                  <div className="flex items-center gap-1.5">
+                    {activeCard.difficulty && DIFFICULTY_LABEL[activeCard.difficulty as FlashcardDifficulty] && (
                       <Badge
                         variant="outline"
                         className={cn(
                           "text-[11px]",
-                          DIFFICULTY_LABEL[activeCard.difficulty].className
+                          DIFFICULTY_LABEL[activeCard.difficulty as FlashcardDifficulty].className
                         )}
                       >
-                        {DIFFICULTY_LABEL[activeCard.difficulty].label}
+                        {DIFFICULTY_LABEL[activeCard.difficulty as FlashcardDifficulty].label}
                       </Badge>
                     )}
                     <BookmarkButton
@@ -171,9 +363,20 @@ export function DocumentFlashcardsSection({
                       type="button"
                       variant="ghost"
                       size="icon"
+                      className="h-7 w-7 text-neutral-400 hover:text-blue-600"
+                      disabled={updateMutation.isPending}
+                      onClick={() => openEditModal(activeCard)}
+                      aria-label="Edit flashcard"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
                       className="h-7 w-7 text-neutral-400 hover:text-red-600"
                       disabled={deleteMutation.isPending}
-                      onClick={() => deleteMutation.mutate(activeCard.id)}
+                      onClick={() => setDeleteTargetId(activeCard.id)}
                       aria-label="Hapus flashcard"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -228,13 +431,18 @@ export function DocumentFlashcardsSection({
               </div>
             )}
 
-            {/* All Cards List */}
-            <div className="space-y-2 border-t border-border/60 pt-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Semua Kartu
-              </p>
-              <div className="grid gap-2.5 sm:grid-cols-2">
-                {flashcards.map((card, index) => (
+            {/* All Cards List (sembunyikan jawaban agar active recall terjaga) */}
+            <div className="space-y-2.5 border-t border-neutral-100 pt-5">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+                  Daftar Pertanyaan
+                </p>
+                <span className="text-[11px] text-neutral-400">
+                  Pintasan: Spasi balik · ← / → pindah
+                </span>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {filteredFlashcards.map((card, index) => (
                   <button
                     key={card.id}
                     type="button"
@@ -243,17 +451,14 @@ export function DocumentFlashcardsSection({
                       setFlipped(false);
                     }}
                     className={cn(
-                      "rounded-xl border p-3.5 text-left transition-colors",
+                      "rounded-xl border p-3 text-left transition-colors",
                       index === safeIndex
-                        ? "border-blue-300 bg-blue-50/40"
-                        : "border-border/60 bg-background hover:bg-muted/20"
+                        ? "border-blue-200 bg-blue-50/40"
+                        : "border-neutral-100 bg-neutral-50/40 hover:border-neutral-200 hover:bg-white"
                     )}
                   >
-                    <p className="line-clamp-2 text-xs font-medium text-foreground">
+                    <p className="line-clamp-2 text-xs font-medium text-neutral-800">
                       {index + 1}. {card.question}
-                    </p>
-                    <p className="mt-1 line-clamp-1 text-[11px] text-muted-foreground">
-                      {card.answer}
                     </p>
                   </button>
                 ))}
@@ -263,6 +468,7 @@ export function DocumentFlashcardsSection({
         )}
       </div>
 
+      {/* Dialog Tambah Flashcard Manual */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -299,19 +505,7 @@ export function DocumentFlashcardsSection({
 
             <div className="space-y-1.5">
               <Label>Tingkat Kesulitan</Label>
-              <div className="flex gap-2">
-                {(["easy", "medium", "hard"] as const).map((lvl) => (
-                  <Button
-                    key={lvl}
-                    type="button"
-                    size="sm"
-                    variant={difficulty === lvl ? "default" : "outline"}
-                    onClick={() => setDifficulty(lvl)}
-                  >
-                    {DIFFICULTY_LABEL[lvl].label}
-                  </Button>
-                ))}
-              </div>
+              <DifficultySelector value={difficulty} onChange={setDifficulty} />
             </div>
 
             <DialogFooter>
@@ -331,6 +525,120 @@ export function DocumentFlashcardsSection({
               </Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Edit Flashcard */}
+      <Dialog
+        open={Boolean(editingCard)}
+        onOpenChange={(open) => {
+          if (!open && !updateMutation.isPending) setEditingCard(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Flashcard</DialogTitle>
+            <DialogDescription>
+              Perbarui pertanyaan, jawaban, atau tingkat kesulitan kartu ini.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleUpdate} className="space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="fc-edit-question">Pertanyaan</Label>
+              <Textarea
+                id="fc-edit-question"
+                rows={3}
+                value={editQuestion}
+                onChange={(e) => setEditQuestion(e.target.value)}
+                placeholder="Tulis pertanyaan..."
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="fc-edit-answer">Jawaban</Label>
+              <Textarea
+                id="fc-edit-answer"
+                rows={3}
+                value={editAnswer}
+                onChange={(e) => setEditAnswer(e.target.value)}
+                placeholder="Tulis jawaban..."
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Tingkat Kesulitan</Label>
+              <DifficultySelector value={editDifficulty} onChange={setEditDifficulty} />
+            </div>
+
+            {editingCard?.sourceExcerpt && (
+              <div className="space-y-1.5">
+                <Label>Kutipan Sumber</Label>
+                <p className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2 text-xs italic leading-relaxed text-neutral-600">
+                  &ldquo;{editingCard.sourceExcerpt}&rdquo;
+                </p>
+              </div>
+            )}
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={updateMutation.isPending}
+                onClick={() => setEditingCard(null)}
+              >
+                Batal
+              </Button>
+              <Button
+                type="submit"
+                disabled={updateMutation.isPending}
+                className="bg-blue-600 text-white hover:bg-blue-700"
+              >
+                {updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog Hapus Flashcard */}
+      <Dialog
+        open={Boolean(deleteTargetId)}
+        onOpenChange={(open) => {
+          if (!open && !deleteMutation.isPending) setDeleteTargetId(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Hapus Flashcard?</DialogTitle>
+            <DialogDescription>
+              Kartu tanya jawab ini akan dihapus permanen dari dokumen.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={deleteMutation.isPending}
+              onClick={() => setDeleteTargetId(null)}
+            >
+              Batal
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={deleteMutation.isPending}
+              onClick={async () => {
+                if (!deleteTargetId) return;
+                await deleteMutation.mutateAsync(deleteTargetId);
+                setDeleteTargetId(null);
+              }}
+            >
+              {deleteMutation.isPending ? "Menghapus..." : "Ya, Hapus"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </section>

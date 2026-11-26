@@ -46,10 +46,7 @@ export function HowItWorksSection() {
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-400">
               Cara Kerja
             </p>
-            <h2
-              className="mb-6 text-4xl font-normal leading-snug text-neutral-900"
-              style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
-            >
+            <h2 className="mb-6 font-serif text-4xl font-normal leading-snug text-neutral-900">
               Dari PDF hingga{" "}
               <span className="italic text-blue-600">paham tuntas</span>
               <br />

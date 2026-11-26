@@ -72,12 +72,10 @@ function DocumentCard({ document: doc, onClick }: DocumentCardProps) {
     <button
       type="button"
       onClick={() => onClick?.(doc.id)}
-      disabled={!isReady && doc.status !== "failed"}
       className={cn(
-        "group w-full text-left rounded-xl border border-neutral-100 bg-white p-4",
-        "transition-all duration-150",
-        isReady && "hover:border-neutral-200 hover:shadow-md hover:shadow-neutral-100/80 cursor-pointer",
-        !isReady && "cursor-default opacity-80"
+        "group w-full cursor-pointer text-left rounded-xl border border-neutral-100 bg-white p-4",
+        "transition-all duration-150 hover:border-neutral-200 hover:shadow-md hover:shadow-neutral-100/80",
+        !isReady && "opacity-90"
       )}
     >
       {/* Top row */}

@@ -138,10 +138,7 @@ export function LoginForm({
             <BookOpen className="h-5 w-5 text-white" />
           </div>
         </div>
-        <h1
-          className="mb-1.5 text-2xl font-normal tracking-tight text-neutral-900"
-          style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
-        >
+        <h1 className="mb-1.5 font-serif text-2xl font-normal tracking-tight text-neutral-900">
           Selamat datang kembali
         </h1>
         <p className="text-sm text-neutral-500">

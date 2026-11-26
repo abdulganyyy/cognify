@@ -1,7 +1,19 @@
 import type { User } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { AppError } from "@/lib/utils/errors";
+
+export async function redirectIfAuthenticated() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/dashboard");
+  }
+}
 
 export async function requireApiUser() {
   const supabase = await createClient();

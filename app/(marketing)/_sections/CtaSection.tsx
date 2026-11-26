@@ -33,10 +33,7 @@ export function CtaSection() {
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-blue-500">
               Mulai belajar hari ini
             </p>
-            <h2
-              className="mb-5 text-4xl font-normal leading-tight text-neutral-900 md:text-5xl"
-              style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
-            >
+            <h2 className="mb-5 font-serif text-4xl font-normal leading-tight text-neutral-900 md:text-5xl">
               Dokumenmu layak untuk
               <br />
               <span className="italic text-blue-600">benar-benar dipahami.</span>

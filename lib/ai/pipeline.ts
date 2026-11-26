@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { sleep } from "@/lib/ai/client";
 import { generateDocumentFlashcards } from "@/lib/ai/flashcards";
 import { generateDocumentSummary } from "@/lib/ai/summarizer";
 import { generateDocumentTopics } from "@/lib/ai/topics";
@@ -11,6 +12,7 @@ import { logger } from "@/lib/utils/logger";
 import type { DocumentRow, DocumentSectionRow } from "@/types/database";
 
 export const STALE_PROCESSING_MS = 3 * 60 * 1000;
+export const PIPELINE_STEP_DELAY_MS = 1500;
 
 export function isProcessingLockActive(doc: Pick<DocumentRow, "status" | "updated_at">): boolean {
   if (doc.status !== "processing") return false;
@@ -26,6 +28,35 @@ function mapSectionId(
   if (!sectionNumber) return null;
   const found = sections.find((s) => s.section_index === sectionNumber);
   return found?.id ?? null;
+}
+
+/**
+ * Menghapus `processing_error` jika seluruh tahap AI sudah berstatus `ready`.
+ */
+async function clearProcessingErrorIfAllReady(
+  supabase: SupabaseClient,
+  documentId: string
+): Promise<void> {
+  const { data } = await supabase
+    .from("documents")
+    .select("summary_status, topic_status, flashcard_status, processing_error")
+    .eq("id", documentId)
+    .maybeSingle();
+
+  if (
+    data &&
+    data.summary_status === "ready" &&
+    data.topic_status === "ready" &&
+    data.flashcard_status === "ready"
+  ) {
+    await supabase
+      .from("documents")
+      .update({
+        status: "ready",
+        ...(data.processing_error !== null ? { processing_error: null } : {}),
+      })
+      .eq("id", documentId);
+  }
 }
 
 export async function runSummaryGeneration(
@@ -91,6 +122,8 @@ export async function runSummaryGeneration(
       .update({ summary_status: "ready" })
       .eq("id", doc.id);
 
+    await clearProcessingErrorIfAllReady(supabase, doc.id);
+
     return generated;
   } catch (error) {
     await supabase
@@ -148,6 +181,8 @@ export async function runTopicsGeneration(
       .from("documents")
       .update({ topic_status: "ready" })
       .eq("id", doc.id);
+
+    await clearProcessingErrorIfAllReady(supabase, doc.id);
 
     return inserted ?? [];
   } catch (error) {
@@ -212,6 +247,8 @@ export async function runFlashcardsGeneration(
       .from("documents")
       .update({ flashcard_status: "ready" })
       .eq("id", doc.id);
+
+    await clearProcessingErrorIfAllReady(supabase, doc.id);
 
     return inserted ?? [];
   } catch (error) {
@@ -299,7 +336,7 @@ export async function processFullDocumentPipeline(
     const sections = insertedSections as DocumentSectionRow[];
     const docWithText = { ...doc, raw_text: parsed.rawText };
 
-    // Jalankan sekuensial agar aman terhadap rate-limit model gratis OpenRouter
+    // Jalankan sekuensial dengan jeda singkat agar aman terhadap rate-limit model gratis OpenRouter
     const tasks = [
       () => runSummaryGeneration(supabase, docWithText),
       () => runTopicsGeneration(supabase, docWithText, sections),
@@ -309,9 +346,13 @@ export async function processFullDocumentPipeline(
     const errors: string[] = [];
     let successCount = 0;
 
-    for (const runTask of tasks) {
+    for (let i = 0; i < tasks.length; i++) {
+      if (i > 0 && PIPELINE_STEP_DELAY_MS > 0) {
+        await sleep(PIPELINE_STEP_DELAY_MS);
+      }
+
       try {
-        await runTask();
+        await tasks[i]();
         successCount += 1;
       } catch (stepErr) {
         const message =

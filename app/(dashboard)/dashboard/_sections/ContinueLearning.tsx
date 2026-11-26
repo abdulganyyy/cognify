@@ -29,7 +29,7 @@ function ProgressBar({ percent }: { percent: number }) {
 
 interface SessionCardProps {
   session: LearningSession;
-  onContinue?: (documentId: string) => void;
+  onContinue?: (documentId: string, lastSection: LearningSession["lastSection"]) => void;
 }
 
 function SessionCard({ session, onContinue }: SessionCardProps) {
@@ -80,7 +80,7 @@ function SessionCard({ session, onContinue }: SessionCardProps) {
       {/* CTA */}
       <Button
         size="sm"
-        onClick={() => onContinue?.(session.documentId)}
+        onClick={() => onContinue?.(session.documentId, session.lastSection)}
         className="h-8 gap-1.5 w-full bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-100 shadow-none text-xs font-medium"
         variant="ghost"
       >
@@ -95,7 +95,7 @@ function SessionCard({ session, onContinue }: SessionCardProps) {
 
 interface ContinueLearningProps {
   sessions: LearningSession[];
-  onContinue?: (documentId: string) => void;
+  onContinue?: (documentId: string, lastSection: LearningSession["lastSection"]) => void;
 }
 
 /**

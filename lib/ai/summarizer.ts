@@ -19,12 +19,16 @@ export async function generateDocumentSummary(params: {
   text: string;
 }): Promise<GeneratedSummary> {
   const excerpt = truncateText(params.text, 28000);
+  let resolvedModel = AI_MODEL;
 
   const raw = await generateJsonCompletion<unknown>({
     systemPrompt: SUMMARY_SYSTEM_PROMPT,
     userPrompt: `Judul Dokumen: ${params.title}\n\nIsi Dokumen:\n${excerpt}`,
     temperature: 0.3,
     maxTokens: 2200,
+    onModelResolved: (model) => {
+      resolvedModel = model;
+    },
   });
 
   const parsed = summaryResponseSchema.parse(raw);
@@ -32,6 +36,6 @@ export async function generateDocumentSummary(params: {
   return {
     shortSummary: parsed.shortSummary.trim(),
     fullSummary: parsed.fullSummary.trim(),
-    modelName: AI_MODEL,
+    modelName: resolvedModel,
   };
 }

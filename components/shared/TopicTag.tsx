@@ -15,7 +15,7 @@ interface TopicTagProps {
 
 const variantStyles: Record<TopicTagVariant, string> = {
   default:
-    "bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-150",
+    "bg-neutral-50 text-neutral-600 border-neutral-200 hover:bg-neutral-100",
   active:
     "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100",
   subtle:

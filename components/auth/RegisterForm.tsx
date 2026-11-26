@@ -197,10 +197,7 @@ export function RegisterForm({
           </div>
         </div>
 
-        <h1
-          className="mb-1.5 text-2xl font-normal tracking-tight text-neutral-900"
-          style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
-        >
+        <h1 className="mb-1.5 font-serif text-2xl font-normal tracking-tight text-neutral-900">
           Buat akun Cognify
         </h1>
 

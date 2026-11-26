@@ -22,7 +22,7 @@ interface DashboardSearchProps {
  */
 export function DashboardSearch({
   onSearch,
-  placeholder = "Cari dokumen, topik, atau flashcard…",
+  placeholder = "Cari dokumen berdasarkan judul…",
   className,
 }: DashboardSearchProps) {
   const [value, setValue] = useState("");

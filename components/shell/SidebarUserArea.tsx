@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { LogOut, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
@@ -17,6 +18,8 @@ interface SidebarUserAreaProps {
   onSignOut?: () => void;
 }
 
+const emptySubscribe = () => () => {};
+
 function getInitials(name: string): string {
   return name
     .split(" ")
@@ -28,39 +31,51 @@ function getInitials(name: string): string {
 }
 
 export function SidebarUserArea({ user, onSignOut }: SidebarUserAreaProps) {
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+
+  const triggerButton = (
+    <button
+      type="button"
+      className={cn(
+        "group flex w-full items-center gap-2.5 rounded-lg px-2 py-2",
+        "hover:bg-neutral-50 transition-colors",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+      )}
+    >
+      <Avatar className="h-7 w-7 shrink-0">
+        {user.avatarUrl ? (
+          <AvatarImage src={user.avatarUrl} alt={user.name} />
+        ) : null}
+        <AvatarFallback className="bg-blue-100 text-blue-700 text-[10px] font-semibold">
+          {getInitials(user.name)}
+        </AvatarFallback>
+      </Avatar>
+
+      <div className="min-w-0 flex-1 text-left">
+        <p className="truncate text-xs font-medium text-neutral-800">
+          {user.name}
+        </p>
+        <p className="truncate text-[10px] text-neutral-400">
+          {user.email}
+        </p>
+      </div>
+
+      <ChevronUp className="h-3.5 w-3.5 shrink-0 text-neutral-400 transition-transform group-data-[state=open]:rotate-180" />
+    </button>
+  );
+
+  if (!mounted) {
+    return <div className="p-3">{triggerButton}</div>;
+  }
+
   return (
     <div className="p-3">
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            type="button"
-            className={cn(
-              "group flex w-full items-center gap-2.5 rounded-lg px-2 py-2",
-              "hover:bg-neutral-50 transition-colors",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
-            )}
-          >
-            <Avatar className="h-7 w-7 shrink-0">
-              {user.avatarUrl ? (
-                <AvatarImage src={user.avatarUrl} alt={user.name} />
-              ) : null}
-              <AvatarFallback className="bg-blue-100 text-blue-700 text-[10px] font-semibold">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="min-w-0 flex-1 text-left">
-              <p className="truncate text-xs font-medium text-neutral-800">
-                {user.name}
-              </p>
-              <p className="truncate text-[10px] text-neutral-400">
-                {user.email}
-              </p>
-            </div>
-
-            <ChevronUp className="h-3.5 w-3.5 shrink-0 text-neutral-400 transition-transform group-data-[state=open]:rotate-180" />
-          </button>
-        </DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
 
         <DropdownMenuContent
           side="top"

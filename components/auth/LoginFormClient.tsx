@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { formatAuthErrorMessage } from "@/lib/auth/errors";
 import { createClient } from "@/lib/supabase/browser";
 
 type LoginFormValues = {
@@ -21,7 +22,7 @@ export function LoginFormClient() {
     });
 
     if (error) {
-      throw new Error(error.message);
+      throw new Error(formatAuthErrorMessage(error.message));
     }
 
     const nextParam = searchParams.get("next");

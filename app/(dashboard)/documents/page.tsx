@@ -7,7 +7,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { DocumentList } from "@/components/documents/DocumentList";
 import { useUploadModal } from "@/components/documents/UploadDocumentDialog";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { SectionHeader } from "@/components/shared/SectionHeader";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -83,39 +82,44 @@ export default function DocumentsPage() {
   }));
 
   return (
-    <div className="mx-auto max-w-6xl space-y-8 px-6 py-8">
+    <div className="mx-auto max-w-5xl space-y-6 px-6 py-8">
       <PageHeader
-        eyebrow="Dokumen"
         title="Dokumen Belajar"
-        description="Kelola materi PDF, pantau status pemrosesan AI, dan buka kembali topik penting dari setiap dokumen."
+        description="Kelola materi PDF, pantau status pemrosesan AI, dan buka ruang belajarmu."
         actions={
           <Button
             type="button"
+            size="sm"
             onClick={openUploadModal}
-            className="gap-2 bg-blue-600 text-white hover:bg-blue-700"
+            className="h-9 gap-2 bg-blue-600 px-4 text-xs font-medium text-white shadow-sm shadow-blue-100 hover:bg-blue-700"
           >
-            <Upload className="h-4 w-4" />
-            Unggah PDF Baru
+            <Upload className="h-3.5 w-3.5" />
+            Unggah PDF
           </Button>
         }
       />
 
       <DashboardSearch
         onSearch={setSearchQuery}
-        placeholder="Cari judul dokumen..."
+        placeholder="Cari judul dokumen…"
       />
 
-      <section className="space-y-4">
-        <SectionHeader
-          title="Semua Dokumen"
-          description="Kumpulan file PDF yang sudah diunggah dan diproses di Cognify."
-        />
+      <section className="space-y-3">
+        {!documentsQuery.isLoading && !documentsQuery.isError && documents.length > 0 && (
+          <p className="text-xs text-neutral-400">
+            Menampilkan {documents.length} dokumen
+            {searchQuery.trim() ? ` untuk "${searchQuery.trim()}"` : ""}
+          </p>
+        )}
 
         <DocumentList
           documents={documents}
           isLoading={documentsQuery.isLoading}
           isError={documentsQuery.isError}
           onRetry={() => documentsQuery.refetch()}
+          hasSearchQuery={Boolean(searchQuery.trim())}
+          searchQuery={searchQuery.trim()}
+          onUploadClick={openUploadModal}
         />
       </section>
 
