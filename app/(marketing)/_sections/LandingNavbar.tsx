@@ -24,8 +24,8 @@ export function LandingNavbar() {
         {/* Nav links — desktop */}
         <nav className="hidden items-center gap-6 md:flex">
           {[
-            { label: "Features", href: "#features" },
-            { label: "How it works", href: "#how-it-works" },
+            { label: "Fitur", href: "#features" },
+            { label: "Cara Kerja", href: "#how-it-works" },
           ].map(({ label, href }) => (
             <Link
               key={href}
@@ -43,14 +43,14 @@ export function LandingNavbar() {
             href="/login"
             className="hidden text-sm text-neutral-500 transition-colors hover:text-neutral-800 md:block"
           >
-            Sign in
+            Masuk
           </Link>
           <Button
             asChild
             size="sm"
             className="h-8 gap-1.5 bg-blue-600 px-4 text-xs font-medium text-white hover:bg-blue-700 shadow-sm shadow-blue-100"
           >
-            <Link href="/register">Get started free</Link>
+            <Link href="/register">Mulai Gratis</Link>
           </Button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Upload, Bookmark, LayoutDashboard, X } from "lucide-react";
+import { BookOpen, Upload, Bookmark, LayoutDashboard, FileText, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
@@ -19,8 +19,9 @@ import { SidebarUserArea } from "@/components/shell/SidebarUserArea";
 import type { DocumentItem, UserProfile } from "./AppShell";
 
 const NAV_LINKS = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/bookmarks", label: "Bookmarks", icon: Bookmark },
+  { href: "/dashboard", label: "Beranda", icon: LayoutDashboard },
+  { href: "/documents", label: "Dokumen", icon: FileText },
+  { href: "/bookmarks", label: "Bookmark", icon: Bookmark },
 ];
 
 interface MobileSidebarProps {
@@ -100,7 +101,7 @@ export function MobileSidebar({
             )}
           >
             <Upload className="h-3.5 w-3.5" />
-            Upload PDF
+            Unggah PDF
           </Button>
         </div>
 

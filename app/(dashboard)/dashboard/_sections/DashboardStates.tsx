@@ -24,10 +24,10 @@ export function DashboardEmptyState({ onUploadClick }: DashboardEmptyStateProps)
         <FileText className="h-7 w-7 text-blue-400" />
       </div>
 
-      <p className="text-sm font-semibold text-neutral-700">No documents yet</p>
+      <p className="text-sm font-semibold text-neutral-700">Belum ada dokumen</p>
       <p className="mt-2 max-w-xs text-sm leading-relaxed text-neutral-500">
-        Upload your first PDF and Cognify will turn it into summaries, topics,
-        flashcards, and an AI tutor.
+        Unggah PDF pertamamu dan Cognify akan mengubahnya menjadi ringkasan, topik,
+        flashcard, serta Tutor AI.
       </p>
 
       <Button
@@ -36,12 +36,12 @@ export function DashboardEmptyState({ onUploadClick }: DashboardEmptyStateProps)
         className="mt-6 h-9 gap-2 bg-blue-600 px-5 text-xs font-medium text-white hover:bg-blue-700 shadow-sm shadow-blue-100"
       >
         <Upload className="h-3.5 w-3.5" />
-        Upload your first PDF
+        Unggah PDF pertamamu
       </Button>
 
       {/* Visual hint: feature pills */}
       <div className="mt-8 flex flex-wrap justify-center gap-2">
-        {["AI Summary", "Key Topics", "Flashcards", "Document Chat"].map((f) => (
+        {["Ringkasan AI", "Topik Utama", "Flashcards", "Tutor AI"].map((f) => (
           <span
             key={f}
             className="rounded-full border border-neutral-200 bg-white px-3 py-1 text-[11px] font-medium text-neutral-500"

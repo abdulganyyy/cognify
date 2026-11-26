@@ -80,7 +80,7 @@ export function SidebarUserArea({ user, onSignOut }: SidebarUserAreaProps) {
             className="cursor-pointer gap-2 text-xs text-red-600 focus:bg-red-50 focus:text-red-700"
           >
             <LogOut className="h-3.5 w-3.5" />
-            Sign Out
+            Keluar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

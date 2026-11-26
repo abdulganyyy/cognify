@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,10 @@ export function BookmarkButton({
 }: BookmarkButtonProps) {
   const [optimistic, setOptimistic] = useState(isBookmarked);
   const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    setOptimistic(isBookmarked);
+  }, [isBookmarked]);
 
   const handleToggle = async () => {
     if (isPending || disabled) return;

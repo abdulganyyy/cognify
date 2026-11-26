@@ -22,7 +22,7 @@ interface DashboardSearchProps {
  */
 export function DashboardSearch({
   onSearch,
-  placeholder = "Search documents, topics, flashcards…",
+  placeholder = "Cari dokumen, topik, atau flashcard…",
   className,
 }: DashboardSearchProps) {
   const [value, setValue] = useState("");
@@ -56,7 +56,7 @@ export function DashboardSearch({
         <button
           type="button"
           onClick={handleClear}
-          aria-label="Clear search"
+          aria-label="Hapus pencarian"
           className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors"
         >
           <X className="h-3.5 w-3.5" />

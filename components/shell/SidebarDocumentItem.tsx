@@ -13,6 +13,7 @@ const statusDot: Record<DocumentItem["status"], string> = {
   ready: "bg-emerald-400",
   processing: "bg-amber-400 animate-pulse",
   uploading: "bg-sky-400 animate-pulse",
+  uploaded: "bg-sky-400 animate-pulse",
   failed: "bg-red-400",
 };
 
@@ -21,13 +22,6 @@ const statusDot: Record<DocumentItem["status"], string> = {
  *
  * Satu baris dokumen di dalam sidebar.
  * Menampilkan judul, status dot, dan jumlah topik jika tersedia.
- *
- * @example
- * <SidebarDocumentItem
- *   document={{ id: "1", title: "Buku Kalkulus", status: "ready", updatedAt: "2h ago", topicCount: 8 }}
- *   isActive={true}
- *   onClick={() => router.push("/documents/1")}
- * />
  */
 export function SidebarDocumentItem({
   document,
@@ -35,7 +29,9 @@ export function SidebarDocumentItem({
   onClick,
 }: SidebarDocumentItemProps) {
   const isProcessing =
-    document.status === "processing" || document.status === "uploading";
+    document.status === "processing" ||
+    document.status === "uploading" ||
+    document.status === "uploaded";
   const isFailed = document.status === "failed";
 
   return (
@@ -92,8 +88,8 @@ export function SidebarDocumentItem({
           <span className="text-[10px] text-neutral-400 truncate">
             {document.status === "processing"
               ? "Memproses…"
-              : document.status === "uploading"
-              ? "Uploading…"
+              : document.status === "uploading" || document.status === "uploaded"
+              ? "Mengunggah…"
               : document.status === "failed"
               ? "Gagal"
               : document.updatedAt}

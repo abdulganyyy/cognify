@@ -1,104 +1,74 @@
-/**
- * Dashboard Home Page — Cognify
- * File: app/(dashboard)/dashboard/page.tsx
- *
- * Halaman ini adalah Client Component karena ada state search dan interaksi.
- * Data fetching disambungkan via props dari layout atau useEffect sesuai stack.
- *
- * ─── Cara sambungkan ke data asli ────────────────────────────────────────────
- *
- * Ganti DUMMY_* dengan data dari:
- *   - Server Component props (fetch di layout atau page server side)
- *   - React Query / SWR hooks
- *   - Zustand / context store
- *   - Supabase realtime subscription
- *
- * Tidak ada perubahan pada komponen section yang diperlukan.
- * Cukup ganti sumber data di bagian "Data source" bawah.
- * ─────────────────────────────────────────────────────────────────────────────
- */
-
 "use client";
 
-import { useState, useMemo } from "react";
-
-// ── Sections ────────────────────────────────────────────────────────────────
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUploadModal } from "@/components/documents/UploadDocumentDialog";
+import { ErrorState } from "@/components/shared/ErrorState";
+import { useDashboardQuery } from "@/lib/query/hooks";
+import { formatRelativeTime } from "@/lib/utils/dates";
+import { ContinueLearning } from "./_sections/ContinueLearning";
 import { DashboardGreeting } from "./_sections/DashboardGreeting";
 import { DashboardSearch } from "./_sections/DashboardSearch";
-import { UploadCtaCard } from "./_sections/UploadCtaCard";
-import { ContinueLearning } from "./_sections/ContinueLearning";
-import { RecentDocuments } from "./_sections/RecentDocument";
+import { DashboardEmptyState, DashboardSkeleton } from "./_sections/DashboardStates";
 import { QuickBookmarks } from "./_sections/QuickBookmark";
-import {
-  DashboardEmptyState,
-  DashboardSkeleton,
-} from "./_sections/DashboardStates";
-
-// ── Dummy data (ganti dengan data asli) ─────────────────────────────────────
-import {
-  DUMMY_USER,
-  DUMMY_DOCUMENTS,
-  DUMMY_SESSIONS,
-  DUMMY_BOOKMARKS,
-} from "./types";
-import type { BookmarkedItem } from "./types";
-
-// ─────────────────────────────────────────────────────────────────────────────
+import { RecentDocuments } from "./_sections/RecentDocument";
+import { UploadCtaCard } from "./_sections/UploadCtaCard";
+import type { BookmarkedItem, Document, LearningSession } from "./types";
 
 export default function DashboardPage() {
-  // ── State ──────────────────────────────────────────────────────────────────
+  const router = useRouter();
+  const { openUploadModal } = useUploadModal();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading] = useState(false); // → set true saat fetch data asli
+  const dashboardQuery = useDashboardQuery();
 
-  // ── Data source ────────────────────────────────────────────────────────────
-  // Ganti dengan data asli dari hook/fetch/props:
-  const user = DUMMY_USER;
-  const allDocuments = DUMMY_DOCUMENTS;
-  const sessions = DUMMY_SESSIONS;
-  const bookmarks = DUMMY_BOOKMARKS;
+  const allDocuments: Document[] = useMemo(
+    () =>
+      (dashboardQuery.data?.documents ?? []).map((doc) => ({
+        id: doc.id,
+        title: doc.title,
+        status: doc.status,
+        topicCount: doc.topicCount,
+        flashcardCount: doc.flashcardCount,
+        updatedAt: formatRelativeTime(doc.updatedAt),
+        isBookmarked: doc.isBookmarked,
+      })),
+    [dashboardQuery.data?.documents]
+  );
 
-  // ── Search filter ──────────────────────────────────────────────────────────
+  const sessions: LearningSession[] = useMemo(
+    () =>
+      (dashboardQuery.data?.continueLearning ?? []).map((item) => ({
+        documentId: item.documentId,
+        title: item.title,
+        progressPercent: item.progressPercent,
+        lastAccessedAt: formatRelativeTime(item.lastAccessedAt),
+        lastSection: item.lastSection,
+        topicCount: item.topicCount,
+        flashcardCount: item.flashcardCount,
+      })),
+    [dashboardQuery.data?.continueLearning]
+  );
+
+  const bookmarks: BookmarkedItem[] = useMemo(
+    () =>
+      (dashboardQuery.data?.bookmarks ?? []).map((bm) => ({
+        id: bm.id,
+        documentId: bm.documentId,
+        documentTitle: bm.documentTitle,
+        type: bm.type,
+        label: bm.label,
+        savedAt: formatRelativeTime(bm.savedAt),
+      })),
+    [dashboardQuery.data?.bookmarks]
+  );
+
   const filteredDocuments = useMemo(() => {
     if (!searchQuery.trim()) return allDocuments;
     const q = searchQuery.toLowerCase();
-    return allDocuments.filter((doc) =>
-      doc.title.toLowerCase().includes(q)
-    );
+    return allDocuments.filter((doc) => doc.title.toLowerCase().includes(q));
   }, [allDocuments, searchQuery]);
 
-  // ── Handlers (sambungkan ke logic existing) ────────────────────────────────
-  function handleUploadClick() {
-    // → buka upload modal, router push, dsb.
-    console.log("Upload triggered");
-  }
-
-  function handleDocumentClick(id: string) {
-    // → router.push(`/documents/${id}`)
-    console.log("Open document:", id);
-  }
-
-  function handleContinueLearning(documentId: string) {
-    // → router.push(`/documents/${documentId}`)
-    console.log("Continue learning:", documentId);
-  }
-
-  function handleBookmarkClick(item: BookmarkedItem) {
-    // → router.push(`/documents/${item.documentId}`)
-    console.log("Open bookmark:", item);
-  }
-
-  function handleViewAllDocuments() {
-    // → router.push("/documents")
-    console.log("View all documents");
-  }
-
-  function handleViewAllBookmarks() {
-    // → router.push("/bookmarks")
-    console.log("View all bookmarks");
-  }
-
-  // ── Loading state ──────────────────────────────────────────────────────────
-  if (isLoading) {
+  if (dashboardQuery.isLoading) {
     return (
       <div className="mx-auto max-w-5xl px-6 py-8">
         <DashboardSkeleton />
@@ -106,76 +76,77 @@ export default function DashboardPage() {
     );
   }
 
+  if (dashboardQuery.isError || !dashboardQuery.data) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <ErrorState
+          title="Gagal memuat beranda"
+          message="Terjadi kendala saat mengambil data ruang kerjamu."
+          onRetry={() => dashboardQuery.refetch()}
+        />
+      </div>
+    );
+  }
+
+  const user = {
+    name: dashboardQuery.data.user.name,
+    email: dashboardQuery.data.user.email,
+    avatarUrl: dashboardQuery.data.user.avatarUrl ?? undefined,
+  };
+
   const hasDocuments = allDocuments.length > 0;
   const hasSearchResults = filteredDocuments.length > 0;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
       <div className="flex flex-col gap-8">
-
-        {/* ── Greeting ──────────────────────────────────────────────────── */}
         <DashboardGreeting
           user={user}
           documentCount={allDocuments.length}
-          onUploadClick={handleUploadClick}
+          onUploadClick={openUploadModal}
         />
 
-        {/* ── Search ────────────────────────────────────────────────────── */}
-        {hasDocuments && (
-          <DashboardSearch onSearch={setSearchQuery} />
-        )}
+        {hasDocuments && <DashboardSearch onSearch={setSearchQuery} />}
 
-        {/* ── Empty state — zero documents ──────────────────────────────── */}
-        {!hasDocuments && (
-          <DashboardEmptyState onUploadClick={handleUploadClick} />
-        )}
+        {!hasDocuments && <DashboardEmptyState onUploadClick={openUploadModal} />}
 
-        {/* ── Main content — when documents exist ───────────────────────── */}
         {hasDocuments && (
           <>
-            {/* Upload CTA — lunak, tidak mendominasi */}
-            {!searchQuery && (
-              <UploadCtaCard onUploadClick={handleUploadClick} />
-            )}
+            {!searchQuery && <UploadCtaCard onUploadClick={openUploadModal} />}
 
-            {/* Continue Learning — hanya jika ada active session */}
             {!searchQuery && sessions.length > 0 && (
               <ContinueLearning
                 sessions={sessions}
-                onContinue={handleContinueLearning}
+                onContinue={(documentId) => router.push(`/documents/${documentId}`)}
               />
             )}
 
-            {/* Recent / Filtered Documents */}
             {hasSearchResults ? (
               <RecentDocuments
-                documents={filteredDocuments}
-                onDocumentClick={handleDocumentClick}
-                onViewAll={handleViewAllDocuments}
+                documents={filteredDocuments.slice(0, 6)}
+                onDocumentClick={(id) => router.push(`/documents/${id}`)}
+                onViewAll={() => router.push("/documents")}
               />
             ) : (
-              /* Search: no results */
               <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50/60 px-6 py-10 text-center">
                 <p className="text-sm font-medium text-neutral-600">
-                  No documents match &ldquo;{searchQuery}&rdquo;
+                  Tidak ada dokumen yang cocok dengan &ldquo;{searchQuery}&rdquo;
                 </p>
                 <p className="mt-1 text-xs text-neutral-400">
-                  Try a different keyword or upload a new PDF.
+                  Coba kata kunci lain atau unggah PDF baru.
                 </p>
               </div>
             )}
 
-            {/* Bookmarks — hanya jika ada dan tidak sedang search */}
             {!searchQuery && bookmarks.length > 0 && (
               <QuickBookmarks
                 items={bookmarks}
-                onItemClick={handleBookmarkClick}
-                onViewAll={handleViewAllBookmarks}
+                onItemClick={(item) => router.push(`/documents/${item.documentId}`)}
+                onViewAll={() => router.push("/bookmarks")}
               />
             )}
           </>
         )}
-
       </div>
     </div>
   );

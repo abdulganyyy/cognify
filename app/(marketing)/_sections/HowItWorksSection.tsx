@@ -1,31 +1,31 @@
 const STEPS = [
   {
     number: "01",
-    title: "Upload your PDF",
+    title: "Unggah file PDF",
     description:
-      "Drag and drop any academic document, textbook chapter, or lecture note. Up to 10 MB.",
-    detail: "Supports all standard PDFs — scanned or digital.",
+      "Seret dan lepas dokumen kuliah, bab buku teks, atau catatan akademik. Maksimal 10 MB.",
+    detail: "Mendukung dokumen PDF standar berbasis teks.",
   },
   {
     number: "02",
-    title: "AI processes your document",
+    title: "AI memproses dokumenmu",
     description:
-      "Cognify extracts, chunks, and embeds your content into a private knowledge base in seconds.",
-    detail: "All processing happens securely on our servers.",
+      "Cognify mengekstrak, membersihkan, dan memecah materi menjadi bagian-bagian terstruktur dalam hitungan detik.",
+    detail: "Seluruh pemrosesan berjalan aman di server kami.",
   },
   {
     number: "03",
-    title: "Explore your learning kit",
+    title: "Jelajahi paket belajarmu",
     description:
-      "Your document becomes a summary, topic map, flashcard deck, and a chat-ready AI tutor — instantly.",
-    detail: "No prompting required. Just open and learn.",
+      "Dokumenmu langsung berubah menjadi ringkasan, peta topik, dek flashcard, dan Tutor AI yang siap diajak berdiskusi.",
+    detail: "Tanpa perlu merangkai prompt. Langsung buka dan pelajari.",
   },
   {
     number: "04",
-    title: "Study, revisit, retain",
+    title: "Pelajari, simpan, dan ulangi",
     description:
-      "Come back anytime. Your documents and sessions are saved so you can pick up exactly where you left off.",
-    detail: "Bookmark topics, review flashcards, ask follow-ups.",
+      "Kembali kapan saja. Seluruh dokumen, bookmark, dan riwayat percakapanmu tersimpan rapi.",
+    detail: "Tandai topik penting, latih flashcard, dan ajukan pertanyaan lanjutan.",
   },
 ];
 
@@ -44,21 +44,20 @@ export function HowItWorksSection() {
           {/* Left: heading */}
           <div className="lg:sticky lg:top-28 lg:self-start">
             <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-400">
-              How it works
+              Cara Kerja
             </p>
             <h2
               className="mb-6 text-4xl font-normal leading-snug text-neutral-900"
               style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
             >
-              From PDF to{" "}
-              <span className="italic text-blue-600">mastery</span>
+              Dari PDF hingga{" "}
+              <span className="italic text-blue-600">paham tuntas</span>
               <br />
-              in four steps.
+              dalam empat langkah.
             </h2>
             <p className="text-base leading-relaxed text-neutral-500">
-              No setup, no configuration, no prompt engineering. Upload once —
-              and Cognify handles the rest so you can focus on understanding,
-              not organizing.
+              Tanpa konfigurasi rumit atau prompt engineering. Cukup unggah sekali —
+              Cognify menyiapkan materi belajarmu agar kamu fokus memahami konsep.
             </p>
 
             {/* Decorative accent */}
@@ -70,7 +69,7 @@ export function HowItWorksSection() {
             {/* Vertical connector line */}
             <div className="absolute left-5 top-8 h-[calc(100%-64px)] w-px bg-neutral-100 lg:left-6" />
 
-            {STEPS.map((step, index) => (
+            {STEPS.map((step) => (
               <div key={step.number} className="relative flex gap-6 pb-10 last:pb-0">
                 {/* Step number bubble */}
                 <div className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-neutral-100 bg-white lg:h-12 lg:w-12">

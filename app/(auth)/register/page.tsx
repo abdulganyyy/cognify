@@ -3,8 +3,8 @@ import { AuthCard } from "@/components/auth/AuthCard";
 import { RegisterFormClient } from "@/components/auth/RegisterFormClient";
 
 export const metadata: Metadata = {
-  title: "Create account — Cognify",
-  description: "Sign up for a free Cognify account and start learning smarter.",
+  title: "Daftar Akun — Cognify",
+  description: "Buat akun Cognify gratis dan mulai belajar lebih cerdas.",
 };
 
 export default function RegisterPage() {

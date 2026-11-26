@@ -31,19 +31,19 @@ export function CtaSection() {
 
           <div className="relative">
             <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-blue-500">
-              Start learning today
+              Mulai belajar hari ini
             </p>
             <h2
               className="mb-5 text-4xl font-normal leading-tight text-neutral-900 md:text-5xl"
               style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
             >
-              Your documents deserve
+              Dokumenmu layak untuk
               <br />
-              <span className="italic text-blue-600">to be understood.</span>
+              <span className="italic text-blue-600">benar-benar dipahami.</span>
             </h2>
             <p className="mx-auto mb-8 max-w-md text-base leading-relaxed text-neutral-500">
-              Join students turning passive reading into real retention.
-              Cognify is free to start — no credit card needed.
+              Ubah cara membaca pasif menjadi pemahaman jangka panjang.
+              Cognify gratis untuk memulai tanpa kartu kredit.
             </p>
 
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
@@ -53,7 +53,7 @@ export function CtaSection() {
                 className="h-11 gap-2 bg-blue-600 px-8 text-sm font-medium text-white hover:bg-blue-700 shadow-lg shadow-blue-200"
               >
                 <Link href="/register">
-                  Create free account
+                  Buat Akun Gratis
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -63,12 +63,12 @@ export function CtaSection() {
                 size="lg"
                 className="h-11 border-blue-200 bg-white/80 px-8 text-sm font-medium text-neutral-700 hover:bg-white"
               >
-                <Link href="/login">Sign in</Link>
+                <Link href="/login">Masuk</Link>
               </Button>
             </div>
 
             <p className="mt-6 text-xs text-neutral-400">
-              Free plan includes 3 documents · No payment info required
+              Gratis digunakan · Tanpa informasi pembayaran
             </p>
           </div>
         </div>

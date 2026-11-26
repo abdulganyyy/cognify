@@ -79,14 +79,14 @@ export function LoginForm({
   function validate(): LoginFormErrors {
     const errs: LoginFormErrors = {};
     if (!values.email.trim()) {
-      errs.email = "Email is required.";
+      errs.email = "Email wajib diisi.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-      errs.email = "Enter a valid email address.";
+      errs.email = "Masukkan alamat email yang valid.";
     }
     if (!values.password) {
-      errs.password = "Password is required.";
+      errs.password = "Kata sandi wajib diisi.";
     } else if (values.password.length < 6) {
-      errs.password = "Password must be at least 6 characters.";
+      errs.password = "Kata sandi minimal 6 karakter.";
     }
     return errs;
   }
@@ -108,7 +108,7 @@ export function LoginForm({
       await onSubmit(values);
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Something went wrong. Try again.";
+        err instanceof Error ? err.message : "Terjadi kesalahan. Silakan coba lagi.";
       setErrors({ root: message });
     } finally {
       setInternalLoading(false);
@@ -142,10 +142,10 @@ export function LoginForm({
           className="mb-1.5 text-2xl font-normal tracking-tight text-neutral-900"
           style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
         >
-          Welcome back
+          Selamat datang kembali
         </h1>
         <p className="text-sm text-neutral-500">
-          Sign in to continue learning with Cognify
+          Masuk untuk melanjutkan belajarmu di Cognify
         </p>
       </div>
 
@@ -173,13 +173,13 @@ export function LoginForm({
             htmlFor="email"
             className="text-xs font-medium text-neutral-700"
           >
-            Email address
+            Alamat email
           </Label>
           <Input
             id="email"
             type="email"
             autoComplete="email"
-            placeholder="you@university.ac.id"
+            placeholder="kamu@kampus.ac.id"
             value={values.email}
             onChange={handleChange("email")}
             disabled={isLoading}
@@ -213,15 +213,8 @@ export function LoginForm({
               htmlFor="password"
               className="text-xs font-medium text-neutral-700"
             >
-              Password
+              Kata sandi
             </Label>
-            <Link
-              href="/forgot-password"
-              tabIndex={isLoading ? -1 : 0}
-              className="text-xs text-blue-500 transition-colors hover:text-blue-700"
-            >
-              Forgot password?
-            </Link>
           </div>
           <div className="relative">
             <Input
@@ -249,7 +242,7 @@ export function LoginForm({
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               disabled={isLoading}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors hover:text-neutral-700 focus:outline-none"
               tabIndex={-1}
             >
@@ -286,22 +279,22 @@ export function LoginForm({
           {isLoading ? (
             <span className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Signing in…
+              Sedang masuk…
             </span>
           ) : (
-            "Sign in"
+            "Masuk"
           )}
         </Button>
       </form>
 
       {/* ── Footer link ────────────────────────────────────────────────── */}
       <p className="mt-6 text-center text-sm text-neutral-500">
-        Don&apos;t have an account?{" "}
+        Belum punya akun?{" "}
         <Link
           href="/register"
           className="font-medium text-blue-600 transition-colors hover:text-blue-800"
         >
-          Create one free
+          Daftar gratis
         </Link>
       </p>
     </div>

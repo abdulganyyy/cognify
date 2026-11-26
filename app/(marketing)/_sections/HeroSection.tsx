@@ -34,7 +34,7 @@ export function HeroSection() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-blue-500" />
             </span>
-            AI-powered learning, built for students
+            Pembelajaran berbasis AI untuk mahasiswa
           </div>
 
           {/* Headline */}
@@ -42,15 +42,14 @@ export function HeroSection() {
             className="mb-6 text-5xl font-normal leading-tight tracking-tight text-neutral-900 md:text-6xl lg:text-7xl"
             style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
           >
-            Turn any PDF into{" "}
-            <span className="italic text-blue-600">active knowledge</span>
+            Ubah setiap PDF menjadi{" "}
+            <span className="italic text-blue-600">pengetahuan aktif</span>
           </h1>
 
           {/* Sub */}
           <p className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-neutral-500 md:text-lg">
-            Upload a document. Cognify extracts what matters — summaries, key
-            topics, flashcards, and an AI tutor that knows your material
-            inside out.
+            Unggah dokumenmu. Cognify mengekstrak intisari terpenting — mulai dari
+            ringkasan, topik kunci, flashcard, hingga Tutor AI yang memahami isi materimu.
           </p>
 
           {/* CTA group */}
@@ -61,7 +60,7 @@ export function HeroSection() {
               className="h-11 gap-2 bg-blue-600 px-6 text-sm font-medium text-white hover:bg-blue-700 shadow-md shadow-blue-100"
             >
               <Link href="/register">
-                Start for free
+                Mulai Gratis
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
@@ -74,15 +73,14 @@ export function HeroSection() {
             >
               <Link href="#preview">
                 <FileText className="h-4 w-4 text-neutral-400" />
-                See how it works
+                Lihat Cara Kerja
               </Link>
             </Button>
           </div>
 
           {/* Trust line */}
           <p className="mt-8 text-xs text-neutral-400">
-            Free to start · No credit card required · Built for university
-            students
+            Gratis untuk memulai · Tanpa kartu kredit · Dirancang untuk mahasiswa
           </p>
         </div>
       </div>

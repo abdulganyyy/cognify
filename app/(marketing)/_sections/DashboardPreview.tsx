@@ -25,7 +25,7 @@ export function DashboardPreview() {
         {/* Section label */}
         <div className="mb-6 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-neutral-400">
-            Product Preview
+            Pratinjau Produk
           </p>
         </div>
 
@@ -59,22 +59,22 @@ export function DashboardPreview() {
               {/* Upload button */}
               <div className="px-3 py-3">
                 <div className="flex h-7 w-full items-center justify-center gap-1.5 rounded-lg bg-blue-600 text-[10px] font-medium text-white">
-                  <span>+ Upload PDF</span>
+                  <span>+ Unggah PDF</span>
                 </div>
               </div>
 
               {/* Section label */}
               <p className="px-4 pb-1 text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
-                Documents
+                Dokumen
               </p>
 
               {/* Doc list */}
               <div className="flex-1 space-y-0.5 overflow-hidden px-2">
                 {[
-                  { title: "Calculus Vol. 2", active: true, status: "ready", topics: 12 },
-                  { title: "Intro to ML", active: false, status: "processing", topics: 0 },
-                  { title: "Data Structures", active: false, status: "ready", topics: 8 },
-                  { title: "Linear Algebra", active: false, status: "ready", topics: 6 },
+                  { title: "Kalkulus Vol. 2", active: true, status: "ready", topics: 12 },
+                  { title: "Pengantar ML", active: false, status: "processing", topics: 0 },
+                  { title: "Struktur Data", active: false, status: "ready", topics: 8 },
+                  { title: "Aljabar Linear", active: false, status: "ready", topics: 6 },
                 ].map((doc) => (
                   <div
                     key={doc.title}
@@ -111,8 +111,8 @@ export function DashboardPreview() {
                         />
                         <span className="text-[9px] text-neutral-400">
                           {doc.status === "ready"
-                            ? `${doc.topics} topics`
-                            : "Processing…"}
+                            ? `${doc.topics} topik`
+                            : "Memproses…"}
                         </span>
                       </div>
                     </div>
@@ -139,16 +139,16 @@ export function DashboardPreview() {
               {/* Topbar */}
               <div className="flex h-11 items-center border-b border-neutral-100 px-5">
                 <p className="text-xs font-semibold text-neutral-800">
-                  Calculus Vol. 2
+                  Kalkulus Vol. 2
                 </p>
                 <div className="ml-3 flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5">
                   <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500" />
                   <span className="text-[9px] font-medium text-emerald-600">
-                    Ready
+                    Siap
                   </span>
                 </div>
                 <div className="ml-auto flex gap-2">
-                  {["Summary", "Topics", "Flashcards", "Chat"].map((tab, i) => (
+                  {["Ringkasan", "Topik", "Flashcards", "Tutor AI"].map((tab, i) => (
                     <span
                       key={tab}
                       className={`text-[10px] font-medium px-2 py-0.5 rounded-md ${
@@ -171,7 +171,7 @@ export function DashboardPreview() {
                     <div className="mb-3 flex items-center gap-1.5">
                       <Sparkles className="h-3 w-3 text-blue-500" />
                       <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
-                        AI Summary
+                        Ringkasan AI
                       </p>
                     </div>
                     <div className="space-y-2">
@@ -204,23 +204,23 @@ export function DashboardPreview() {
                       <div className="flex items-center gap-1.5">
                         <Layers className="h-3 w-3 text-blue-500" />
                         <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
-                          Key Topics
+                          Topik Utama
                         </p>
                       </div>
                       <span className="text-[9px] text-neutral-400">
-                        12 topics
+                        12 topik
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {[
-                        "Limits & Continuity",
-                        "Derivatives",
-                        "Chain Rule",
-                        "Integration",
-                        "Riemann Sums",
-                        "Fundamental Theorem",
-                        "Partial Derivatives",
-                        "Series & Sequences",
+                        "Limit & Kontinuitas",
+                        "Turunan",
+                        "Aturan Rantai",
+                        "Integral",
+                        "Jumlah Riemann",
+                        "Teorema Dasar",
+                        "Turunan Parsial",
+                        "Deret & Barisan",
                       ].map((topic) => (
                         <span
                           key={topic}
@@ -237,15 +237,15 @@ export function DashboardPreview() {
                     <div className="mb-2 flex items-center gap-1.5">
                       <Clock className="h-3 w-3 text-blue-500" />
                       <p className="text-[10px] font-semibold uppercase tracking-wider text-blue-500">
-                        Flashcards Ready
+                        Flashcard Siap
                       </p>
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="text-[10px] text-neutral-600">
-                        24 cards generated from this document
+                        24 kartu dibuat otomatis dari dokumen ini
                       </p>
                       <div className="flex items-center gap-0.5 text-[9px] font-medium text-blue-600">
-                        Study now
+                        Mulai belajar
                         <ChevronRight className="h-3 w-3" />
                       </div>
                     </div>
@@ -258,10 +258,10 @@ export function DashboardPreview() {
                   <div className="flex h-10 items-center gap-1.5 border-b border-neutral-100 px-4">
                     <MessageSquare className="h-3 w-3 text-blue-500" />
                     <p className="text-[10px] font-semibold text-neutral-700">
-                      Ask AI
+                      Tanya AI
                     </p>
                     <span className="ml-auto rounded-full bg-blue-100 px-1.5 py-0.5 text-[9px] font-medium text-blue-600">
-                      RAG
+                      PDF
                     </span>
                   </div>
 
@@ -269,19 +269,19 @@ export function DashboardPreview() {
                   <div className="flex flex-1 flex-col gap-2.5 overflow-hidden p-3">
                     {/* User message */}
                     <div className="self-end rounded-xl rounded-tr-sm bg-blue-600 px-2.5 py-1.5 text-[10px] leading-relaxed text-white">
-                      What is the chain rule used for?
+                      Apa fungsi aturan rantai?
                     </div>
 
                     {/* AI response */}
                     <div className="self-start rounded-xl rounded-tl-sm border border-neutral-200 bg-white px-2.5 py-2 text-[10px] leading-relaxed text-neutral-700">
-                      The chain rule is used to differentiate composite functions. If{" "}
-                      <span className="font-medium">y = f(g(x))</span>, then
+                      Aturan rantai digunakan untuk menurunkan fungsi komposit. Jika{" "}
+                      <span className="font-medium">y = f(g(x))</span>, maka
                       dy/dx = f′(g(x)) · g′(x).
                     </div>
 
                     {/* User */}
                     <div className="self-end rounded-xl rounded-tr-sm bg-blue-600 px-2.5 py-1.5 text-[10px] leading-relaxed text-white">
-                      Give me an example from chapter 3
+                      Berikan contoh dari bab 3
                     </div>
 
                     {/* AI typing */}
@@ -315,7 +315,7 @@ export function DashboardPreview() {
 
         {/* Caption */}
         <p className="mt-5 text-center text-xs text-neutral-400">
-          Everything you see is generated by AI from a single PDF upload.
+          Semua yang kamu lihat dihasilkan otomatis oleh AI hanya dari satu kali unggah PDF.
         </p>
       </div>
     </section>

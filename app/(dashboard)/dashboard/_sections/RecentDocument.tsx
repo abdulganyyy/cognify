@@ -18,14 +18,14 @@ const statusConfig: Record<
   { label: string; icon: React.ElementType; iconClass: string; badgeClass: string; dotClass: string; pulse?: boolean }
 > = {
   ready: {
-    label: "Ready",
+    label: "Siap",
     icon: CheckCircle2,
     iconClass: "text-emerald-500",
     badgeClass: "bg-emerald-50 text-emerald-600 border-emerald-200",
     dotClass: "bg-emerald-400",
   },
   processing: {
-    label: "Processing",
+    label: "Diproses",
     icon: Loader2,
     iconClass: "text-amber-500 animate-spin",
     badgeClass: "bg-amber-50 text-amber-600 border-amber-200",
@@ -33,7 +33,15 @@ const statusConfig: Record<
     pulse: true,
   },
   uploading: {
-    label: "Uploading",
+    label: "Mengunggah",
+    icon: ArrowUpCircle,
+    iconClass: "text-sky-500",
+    badgeClass: "bg-sky-50 text-sky-600 border-sky-200",
+    dotClass: "bg-sky-400",
+    pulse: true,
+  },
+  uploaded: {
+    label: "Diunggah",
     icon: ArrowUpCircle,
     iconClass: "text-sky-500",
     badgeClass: "bg-sky-50 text-sky-600 border-sky-200",
@@ -41,7 +49,7 @@ const statusConfig: Record<
     pulse: true,
   },
   failed: {
-    label: "Failed",
+    label: "Gagal",
     icon: AlertCircle,
     iconClass: "text-red-500",
     badgeClass: "bg-red-50 text-red-600 border-red-200",
@@ -58,7 +66,6 @@ interface DocumentCardProps {
 
 function DocumentCard({ document: doc, onClick }: DocumentCardProps) {
   const cfg = statusConfig[doc.status];
-  const StatusIcon = cfg.icon;
   const isReady = doc.status === "ready";
 
   return (
@@ -108,24 +115,24 @@ function DocumentCard({ document: doc, onClick }: DocumentCardProps) {
         <div className="flex items-center gap-3 mb-3">
           <div className="flex items-center gap-1 text-xs text-neutral-500">
             <Layers className="h-3 w-3 text-neutral-400" />
-            {doc.topicCount} topics
+            {doc.topicCount} topik
           </div>
           <div className="h-3 w-px bg-neutral-200" />
           <div className="flex items-center gap-1 text-xs text-neutral-500">
             <CreditCard className="h-3 w-3 text-neutral-400" />
-            {doc.flashcardCount} cards
+            {doc.flashcardCount} kartu
           </div>
         </div>
       )}
 
-      {doc.status === "processing" && (
+      {(doc.status === "processing" || doc.status === "uploaded") && (
         <p className="mb-3 text-xs text-neutral-400">
-          AI is generating your learning materials…
+          AI sedang menyiapkan materi belajarmu…
         </p>
       )}
       {doc.status === "failed" && (
         <p className="mb-3 text-xs text-red-500">
-          Processing failed. Please re-upload.
+          Pemrosesan gagal. Klik untuk mencoba ulang.
         </p>
       )}
 
@@ -137,7 +144,7 @@ function DocumentCard({ document: doc, onClick }: DocumentCardProps) {
             "flex items-center gap-0.5 text-[11px] font-medium text-blue-500",
             "opacity-0 group-hover:opacity-100 transition-opacity"
           )}>
-            Open
+            Buka
             <ChevronRight className="h-3 w-3" />
           </span>
         )}
@@ -174,14 +181,14 @@ export function RecentDocuments({
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-neutral-800">Recent Documents</h2>
+        <h2 className="text-sm font-semibold text-neutral-800">Dokumen Terbaru</h2>
         {documents.length > 0 && (
           <button
             type="button"
             onClick={onViewAll}
             className="text-xs font-medium text-blue-500 hover:text-blue-700 transition-colors"
           >
-            View all
+            Lihat semua
           </button>
         )}
       </div>

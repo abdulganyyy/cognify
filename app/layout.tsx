@@ -3,8 +3,8 @@ import './globals.css'
 import Providers from './providers'
 
 export const metadata: Metadata = {
-  title: 'Cognify',
-  description: 'AI learning app for PDF-based study',
+  title: 'Cognify — Belajar Lebih Cerdas dari Setiap PDF',
+  description: 'Platform belajar berbasis AI untuk mengubah dokumen PDF menjadi ringkasan, topik utama, flashcard, dan tutor interaktif.',
 }
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="id">
       <body>
         <Providers>{children}</Providers>
       </body>

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils/cn";
 export interface DocumentItem {
   id: string;
   title: string;
-  status: "ready" | "processing" | "failed" | "uploading";
+  status: "ready" | "processing" | "failed" | "uploading" | "uploaded";
   updatedAt: string;
   topicCount?: number;
 }

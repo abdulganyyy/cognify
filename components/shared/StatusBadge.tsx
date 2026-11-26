@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils/cn";
 // ─── Tipe status dokumen ───────────────────────────────────────────────────
 
 export type DocumentStatus =
+  | "uploaded"
   | "processing"
   | "ready"
   | "failed"
@@ -22,8 +23,14 @@ const config: Record<
   DocumentStatus,
   { label: string; badge: string; dot: string; pulse?: boolean }
 > = {
+  uploaded: {
+    label: "Diunggah",
+    badge: "bg-sky-50 text-sky-600 border-sky-200",
+    dot: "bg-sky-400",
+    pulse: true,
+  },
   uploading: {
-    label: "Uploading",
+    label: "Mengunggah",
     badge: "bg-sky-50 text-sky-600 border-sky-200",
     dot: "bg-sky-400",
     pulse: true,

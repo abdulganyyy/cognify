@@ -6,10 +6,10 @@ import type { LearningSession } from "../types";
 // ─── Section label map ────────────────────────────────────────────────────────
 
 const sectionLabel: Record<LearningSession["lastSection"], string> = {
-  summary: "Summary",
-  topics: "Topics",
+  summary: "Ringkasan",
+  topics: "Topik",
   flashcards: "Flashcards",
-  chat: "AI Chat",
+  chat: "Tutor AI",
 };
 
 // ─── Progress bar ─────────────────────────────────────────────────────────────
@@ -45,7 +45,7 @@ function SessionCard({ session, onContinue }: SessionCardProps) {
             {session.title}
           </p>
           <p className="mt-0.5 text-xs text-neutral-400">
-            Last studied {session.lastAccessedAt} · {sectionLabel[session.lastSection]}
+            Terakhir dibuka {session.lastAccessedAt} · {sectionLabel[session.lastSection]}
           </p>
         </div>
       </div>
@@ -54,19 +54,19 @@ function SessionCard({ session, onContinue }: SessionCardProps) {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1 text-xs text-neutral-500">
           <Layers className="h-3 w-3 text-neutral-400" />
-          {session.topicCount} topics
+          {session.topicCount} topik
         </div>
         <div className="h-3 w-px bg-neutral-200" />
         <div className="flex items-center gap-1 text-xs text-neutral-500">
           <CreditCard className="h-3 w-3 text-neutral-400" />
-          {session.flashcardCount} cards
+          {session.flashcardCount} kartu
         </div>
       </div>
 
       {/* Progress */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-medium text-neutral-500">Progress</span>
+          <span className="text-[11px] font-medium text-neutral-500">Progres</span>
           <span className={cn(
             "text-[11px] font-semibold",
             session.progressPercent >= 70 ? "text-emerald-600" : "text-blue-500"
@@ -84,7 +84,7 @@ function SessionCard({ session, onContinue }: SessionCardProps) {
         className="h-8 gap-1.5 w-full bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-100 shadow-none text-xs font-medium"
         variant="ghost"
       >
-        Continue learning
+        Lanjutkan belajar
         <ChevronRight className="h-3.5 w-3.5" />
       </Button>
     </div>
@@ -115,8 +115,8 @@ export function ContinueLearning({ sessions, onContinue }: ContinueLearningProps
   return (
     <section>
       <div className="mb-4">
-        <h2 className="text-sm font-semibold text-neutral-800">Continue Learning</h2>
-        <p className="mt-0.5 text-xs text-neutral-400">Pick up where you left off</p>
+        <h2 className="text-sm font-semibold text-neutral-800">Lanjutkan Belajar</h2>
+        <p className="mt-0.5 text-xs text-neutral-400">Lanjutkan dari bagian terakhir yang kamu pelajari</p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

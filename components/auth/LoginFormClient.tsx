@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { createClient } from "@/lib/supabase/browser";
 
@@ -11,6 +11,7 @@ type LoginFormValues = {
 
 export function LoginFormClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   async function handleLogin({ email, password }: LoginFormValues) {
@@ -23,7 +24,13 @@ export function LoginFormClient() {
       throw new Error(error.message);
     }
 
-    router.push("/dashboard");
+    const nextParam = searchParams.get("next");
+    const safeNext =
+      nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")
+        ? nextParam
+        : "/dashboard";
+
+    router.push(safeNext);
     router.refresh();
   }
 

@@ -8,9 +8,9 @@ import { CtaSection } from "./_sections/CtaSection";
 import { LandingFooter } from "./_sections/LandingFooter";
 
 export const metadata: Metadata = {
-  title: "Cognify — Learn Smarter from Any PDF",
+  title: "Cognify — Belajar Lebih Cerdas dari Setiap PDF",
   description:
-    "Upload a PDF. Let AI distill it into summaries, topics, flashcards, and a personal tutor. Built for students who want to learn, not just read.",
+    "Unggah PDF dan biarkan AI menyusunnya menjadi ringkasan, topik utama, flashcard, dan tutor pribadi. Dibuat untuk mahasiswa yang ingin benar-benar memahami materi.",
 };
 
 export default function LandingPage() {

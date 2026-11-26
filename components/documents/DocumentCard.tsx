@@ -1,57 +1,48 @@
-import Link from "next/link"
-import { FileText, MoreHorizontal } from "lucide-react"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { BookmarkButton } from "@/components/shared/BookmarkButton"
-import { StatusBadge } from "@/components/shared/StatusBadge"
-import { TopicTag } from "@/components/shared/TopicTag"
-import { cn } from "@/lib/utils/cn"
+import Link from "next/link";
+import { ExternalLink, FileText, MoreHorizontal, RefreshCw, Trash2 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { BookmarkButton } from "@/components/shared/BookmarkButton";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import { TopicTag } from "@/components/shared/TopicTag";
+import { cn } from "@/lib/utils/cn";
 
 export type DocumentCardStatus =
   | "draft"
   | "uploaded"
   | "processing"
   | "ready"
-  | "failed"
+  | "failed";
 
 export interface DocumentCardTopic {
-  id: string
-  label: string
+  id: string;
+  label: string;
 }
 
 export interface DocumentCardProps {
-  id: string
-  title: string
-  description?: string
-  updatedAt?: string
-  pageCount?: number
-  status: DocumentCardStatus
-  topics?: DocumentCardTopic[]
-  bookmarked?: boolean
-  href?: string
-  className?: string
-  onBookmarkToggle?: () => void
-  actionSlot?: React.ReactNode
-}
-
-function getStatusBadge(status: DocumentCardStatus): {
-  label: string
-  variant: "default" | "success" | "warning" | "danger" | "info"
-} {
-  switch (status) {
-    case "draft":
-      return { label: "Draft", variant: "default" }
-    case "uploaded":
-      return { label: "Uploaded", variant: "info" }
-    case "processing":
-      return { label: "Processing", variant: "warning" }
-    case "ready":
-      return { label: "Ready", variant: "success" }
-    case "failed":
-      return { label: "Failed", variant: "danger" }
-    default:
-      return { label: "Unknown", variant: "default" }
-  }
+  id: string;
+  title: string;
+  description?: string;
+  updatedAt?: string;
+  pageCount?: number;
+  status: DocumentCardStatus;
+  topics?: DocumentCardTopic[];
+  bookmarked?: boolean;
+  href?: string;
+  className?: string;
+  onBookmarkToggle?: () => void;
+  onRetryProcess?: () => void;
+  onDelete?: () => void;
+  actionSlot?: React.ReactNode;
 }
 
 export function DocumentCard({
@@ -66,10 +57,11 @@ export function DocumentCard({
   href,
   className,
   onBookmarkToggle,
+  onRetryProcess,
+  onDelete,
   actionSlot,
 }: DocumentCardProps) {
-  const statusBadge = getStatusBadge(status)
-  const documentHref = href ?? `/documents/${id}`
+  const documentHref = href ?? `/documents/${id}`;
 
   return (
     <article
@@ -86,7 +78,7 @@ export function DocumentCard({
 
           <div className="min-w-0 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge label={statusBadge.label} status={statusBadge.variant} />
+              <StatusBadge status={status} />
             </div>
 
             <div className="space-y-1">
@@ -108,29 +100,61 @@ export function DocumentCard({
 
         <div className="flex shrink-0 items-center gap-2">
           <BookmarkButton
-            bookmarked={bookmarked}
-            onClick={onBookmarkToggle}
-            aria-label={bookmarked ? "Hapus bookmark dokumen" : "Simpan dokumen"}
+            isBookmarked={bookmarked}
+            onToggle={onBookmarkToggle ? () => onBookmarkToggle() : undefined}
           />
 
           {actionSlot ?? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="rounded-xl text-muted-foreground hover:bg-accent hover:text-foreground"
-              aria-label="Aksi dokumen"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-xl text-muted-foreground hover:bg-accent hover:text-foreground"
+                  aria-label="Aksi dokumen"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44 text-xs">
+                <DropdownMenuItem asChild className="cursor-pointer gap-2">
+                  <Link href={documentHref}>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    Buka Dokumen
+                  </Link>
+                </DropdownMenuItem>
+                {onRetryProcess && (
+                  <DropdownMenuItem
+                    onClick={onRetryProcess}
+                    className="cursor-pointer gap-2"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    Proses Ulang
+                  </DropdownMenuItem>
+                )}
+                {onDelete && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={onDelete}
+                      className="cursor-pointer gap-2 text-red-600 focus:bg-red-50 focus:text-red-700"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      Hapus Dokumen
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </div>
 
       <div className="mt-5 space-y-4">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-          {updatedAt ? <span>Updated {updatedAt}</span> : null}
-          {typeof pageCount === "number" ? <span>{pageCount} pages</span> : null}
+          {updatedAt ? <span>Diperbarui {updatedAt}</span> : null}
+          {typeof pageCount === "number" ? <span>{pageCount} halaman</span> : null}
         </div>
 
         {topics.length > 0 ? (
@@ -141,7 +165,7 @@ export function DocumentCard({
 
             {topics.length > 3 ? (
               <span className="inline-flex items-center rounded-full border border-border bg-background px-3 py-1.5 text-sm text-muted-foreground">
-                +{topics.length - 3} more
+                +{topics.length - 3} lainnya
               </span>
             ) : null}
           </div>
@@ -157,5 +181,5 @@ export function DocumentCard({
         </div>
       </div>
     </article>
-  )
+  );
 }

@@ -11,18 +11,18 @@ const FEATURES = [
     color: "text-blue-500",
     bg: "bg-blue-50",
     ring: "ring-blue-100",
-    title: "AI Summary",
+    title: "Ringkasan AI",
     description:
-      "Every document is condensed into a clear, structured summary — preserving what matters, removing what doesn't.",
+      "Setiap dokumen diringkas secara terstruktur — menjaga intisari penting tanpa membuang waktumu.",
   },
   {
     icon: Layers,
     color: "text-violet-500",
     bg: "bg-violet-50",
     ring: "ring-violet-100",
-    title: "Key Topics",
+    title: "Topik Utama",
     description:
-      "Cognify maps the conceptual landscape of your document so you always know what to study next.",
+      "Cognify memetakan konsep penting dalam dokumen agar kamu selalu tahu materi apa yang harus dipelajari lebih dulu.",
   },
   {
     icon: CreditCard,
@@ -31,16 +31,16 @@ const FEATURES = [
     ring: "ring-emerald-100",
     title: "Flashcards",
     description:
-      "Automatically generated Q&A pairs based on your material. Spaced repetition, without the manual work.",
+      "Kartu tanya-jawab otomatis dari materimu untuk latihan ingatan aktif tanpa perlu menulis ulang secara manual.",
   },
   {
     icon: MessageSquare,
     color: "text-amber-500",
     bg: "bg-amber-50",
     ring: "ring-amber-100",
-    title: "Document Chat",
+    title: "Tanya Tutor AI",
     description:
-      "Ask anything about your PDF. The AI answers only from your document — no hallucinations, no noise.",
+      "Ajukan pertanyaan apa pun tentang isi PDF. AI menjawab langsung berdasarkan bagian dokumenmu.",
   },
 ];
 
@@ -55,18 +55,18 @@ export function FeaturesSection() {
         {/* Header */}
         <div className="mb-16 max-w-xl">
           <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-neutral-400">
-            What you get
+            Fitur Utama
           </p>
           <h2
             className="mb-4 text-4xl font-normal text-neutral-900 leading-snug"
             style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
           >
-            Four tools. One document.{" "}
-            <span className="italic text-blue-600">Everything you need.</span>
+            Empat alat. Satu dokumen.{" "}
+            <span className="italic text-blue-600">Semua yang kamu butuhkan.</span>
           </h2>
           <p className="text-base text-neutral-500 leading-relaxed">
-            Cognify turns passive reading into active learning with a suite of
-            AI tools that work the moment you upload.
+            Cognify mengubah kebiasaan membaca pasif menjadi belajar aktif dengan
+            rangkaian alat AI yang bekerja otomatis begitu PDF diunggah.
           </p>
         </div>
 

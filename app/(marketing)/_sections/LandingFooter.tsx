@@ -2,10 +2,10 @@ import Link from "next/link";
 import { BookOpen } from "lucide-react";
 
 const FOOTER_LINKS = [
-  { label: "Features", href: "#features" },
-  { label: "How it works", href: "#how-it-works" },
-  { label: "Privacy", href: "/privacy" },
-  { label: "Terms", href: "/terms" },
+  { label: "Fitur", href: "#features" },
+  { label: "Cara Kerja", href: "#how-it-works" },
+  { label: "Masuk", href: "/login" },
+  { label: "Daftar", href: "/register" },
 ];
 
 /**
@@ -43,7 +43,7 @@ export function LandingFooter() {
 
         {/* Copyright */}
         <p className="text-xs text-neutral-400">
-          © {year} Cognify. All rights reserved.
+          © {year} Cognify. Seluruh hak cipta dilindungi.
         </p>
       </div>
     </footer>

@@ -40,10 +40,10 @@ export function UploadCtaCard({ onUploadClick }: UploadCtaCardProps) {
           </div>
           <div>
             <p className="text-sm font-semibold text-neutral-800">
-              Upload a new PDF
+              Unggah PDF baru
             </p>
             <p className="mt-0.5 text-xs text-neutral-500 leading-relaxed max-w-sm">
-              Drop any document and Cognify will generate summaries, topics, and flashcards automatically.
+              Masukkan dokumen kuliah atau materi belajarmu, dan Cognify akan membuat ringkasan, topik, serta flashcard secara otomatis.
             </p>
           </div>
         </div>
@@ -52,8 +52,8 @@ export function UploadCtaCard({ onUploadClick }: UploadCtaCardProps) {
         <div className="flex flex-col gap-2 sm:items-end">
           <div className="flex flex-wrap gap-1.5">
             {[
-              { icon: Sparkles, label: "AI Summary" },
-              { icon: FileText, label: "Topics" },
+              { icon: Sparkles, label: "Ringkasan AI" },
+              { icon: FileText, label: "Topik Utama" },
             ].map(({ icon: Icon, label }) => (
               <span
                 key={label}
@@ -70,7 +70,7 @@ export function UploadCtaCard({ onUploadClick }: UploadCtaCardProps) {
             className="h-8 gap-1.5 bg-blue-600 px-4 text-xs font-medium text-white hover:bg-blue-700 shadow-sm shadow-blue-100"
           >
             <Upload className="h-3.5 w-3.5" />
-            Choose file
+            Pilih file
           </Button>
         </div>
       </div>

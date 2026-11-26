@@ -63,9 +63,9 @@ const strengthConfig: Record<
   { label: string; color: string; bars: number }
 > = {
   empty: { label: "", color: "bg-neutral-200", bars: 0 },
-  weak: { label: "Weak", color: "bg-red-400", bars: 1 },
-  fair: { label: "Fair", color: "bg-amber-400", bars: 2 },
-  strong: { label: "Strong", color: "bg-emerald-500", bars: 3 },
+  weak: { label: "Lemah", color: "bg-red-400", bars: 1 },
+  fair: { label: "Cukup", color: "bg-amber-400", bars: 2 },
+  strong: { label: "Kuat", color: "bg-emerald-500", bars: 3 },
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -104,28 +104,28 @@ export function RegisterForm({
     const errs: RegisterFormErrors = {};
 
     if (!values.name.trim()) {
-      errs.name = "Full name is required.";
+      errs.name = "Nama lengkap wajib diisi.";
     } else if (values.name.trim().length < 2) {
-      errs.name = "Name must be at least 2 characters.";
+      errs.name = "Nama minimal 2 karakter.";
     }
 
     if (!values.email.trim()) {
-      errs.email = "Email is required.";
+      errs.email = "Email wajib diisi.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-      errs.email = "Enter a valid email address.";
+      errs.email = "Masukkan alamat email yang valid.";
     }
 
     if (!values.password) {
-      errs.password = "Password is required.";
+      errs.password = "Kata sandi wajib diisi.";
     } else if (values.password.length < 8) {
-      errs.password = "Password must be at least 8 characters.";
+      errs.password = "Kata sandi minimal 8 karakter.";
     }
 
     if (showConfirmPassword) {
       if (!values.confirmPassword) {
-        errs.confirmPassword = "Please confirm your password.";
+        errs.confirmPassword = "Mohon konfirmasi kata sandi.";
       } else if (values.confirmPassword !== values.password) {
-        errs.confirmPassword = "Passwords do not match.";
+        errs.confirmPassword = "Kata sandi tidak cocok.";
       }
     }
 
@@ -150,7 +150,7 @@ export function RegisterForm({
       const message =
         err instanceof Error
           ? err.message
-          : "Something went wrong. Please try again.";
+          : "Terjadi kesalahan. Silakan coba lagi.";
 
       setErrors({ root: message });
     } finally {
@@ -201,11 +201,11 @@ export function RegisterForm({
           className="mb-1.5 text-2xl font-normal tracking-tight text-neutral-900"
           style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
         >
-          Create your account
+          Buat akun Cognify
         </h1>
 
         <p className="text-sm text-neutral-500">
-          Start learning smarter with Cognify — it&apos;s free
+          Mulai belajar lebih cerdas dengan Cognify — gratis
         </p>
       </div>
 
@@ -236,7 +236,7 @@ export function RegisterForm({
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="name" className="text-xs font-medium text-neutral-700">
-            Full name
+            Nama lengkap
           </Label>
           <Input
             id="name"
@@ -257,13 +257,13 @@ export function RegisterForm({
 
         <div className="space-y-1.5">
           <Label htmlFor="email" className="text-xs font-medium text-neutral-700">
-            Email address
+            Alamat email
           </Label>
           <Input
             id="email"
             type="email"
             autoComplete="email"
-            placeholder="you@university.ac.id"
+            placeholder="kamu@kampus.ac.id"
             value={values.email}
             onChange={handleChange("email")}
             disabled={isLoading}
@@ -281,7 +281,7 @@ export function RegisterForm({
             htmlFor="password"
             className="text-xs font-medium text-neutral-700"
           >
-            Password
+            Kata sandi
           </Label>
 
           <div className="relative">
@@ -289,7 +289,7 @@ export function RegisterForm({
               id="password"
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
-              placeholder="Min. 8 characters"
+              placeholder="Min. 8 karakter"
               value={values.password}
               onChange={handleChange("password")}
               disabled={isLoading}
@@ -331,7 +331,7 @@ export function RegisterForm({
                   strength === "strong" && "text-emerald-600"
                 )}
               >
-                {strengthCfg.label} password
+                Kekuatan kata sandi: {strengthCfg.label}
                 {strength === "strong" && (
                   <CheckCircle2 className="ml-1 inline h-3 w-3" />
                 )}
@@ -350,7 +350,7 @@ export function RegisterForm({
               htmlFor="confirmPassword"
               className="text-xs font-medium text-neutral-700"
             >
-              Confirm password
+              Konfirmasi kata sandi
             </Label>
 
             <div className="relative">
@@ -358,7 +358,7 @@ export function RegisterForm({
                 id="confirmPassword"
                 type={showConfirm ? "text" : "password"}
                 autoComplete="new-password"
-                placeholder="Re-enter your password"
+                placeholder="Ulangi kata sandi"
                 value={values.confirmPassword}
                 onChange={handleChange("confirmPassword")}
                 disabled={isLoading}
@@ -383,7 +383,7 @@ export function RegisterForm({
               values.confirmPassword === values.password && (
                 <p className="flex items-center gap-1 text-[11px] font-medium text-emerald-600">
                   <CheckCircle2 className="h-3 w-3" />
-                  Passwords match
+                  Kata sandi cocok
                 </p>
               )}
 
@@ -395,24 +395,6 @@ export function RegisterForm({
             )}
           </div>
         )}
-
-        <p className="text-[11px] leading-relaxed text-neutral-400">
-          By creating an account, you agree to our{" "}
-          <Link
-            href="/terms"
-            className="text-neutral-500 underline underline-offset-2 hover:text-neutral-700"
-          >
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link
-            href="/privacy"
-            className="text-neutral-500 underline underline-offset-2 hover:text-neutral-700"
-          >
-            Privacy Policy
-          </Link>
-          .
-        </p>
 
         <Button
           type="submit"
@@ -427,21 +409,21 @@ export function RegisterForm({
           {isLoading ? (
             <span className="flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Creating account…
+              Membuat akun…
             </span>
           ) : (
-            "Create account"
+            "Buat Akun"
           )}
         </Button>
       </form>
 
       <p className="mt-6 text-center text-sm text-neutral-500">
-        Already have an account?{" "}
+        Sudah punya akun?{" "}
         <Link
           href="/login"
           className="font-medium text-blue-600 transition-colors hover:text-blue-800"
         >
-          Sign in
+          Masuk
         </Link>
       </p>
     </div>
@@ -477,7 +459,7 @@ function TogglePasswordButton({
       type="button"
       onClick={onToggle}
       disabled={disabled}
-      aria-label={show ? "Hide password" : "Show password"}
+      aria-label={show ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
       tabIndex={-1}
       className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors hover:text-neutral-700 focus:outline-none"
     >

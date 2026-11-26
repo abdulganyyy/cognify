@@ -31,7 +31,7 @@ export function RegisterFormClient() {
         data: {
           full_name: name,
         },
-        emailRedirectTo: `${origin}/auth/callback`,
+        emailRedirectTo: `${origin}/callback`,
       },
     });
 

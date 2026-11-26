@@ -8,11 +8,17 @@ const typeConfig: Record<
   BookmarkedItem["type"],
   { icon: React.ElementType; bg: string; iconClass: string; label: string }
 > = {
+  document: {
+    icon: FileText,
+    bg: "bg-blue-50",
+    iconClass: "text-blue-500",
+    label: "Dokumen",
+  },
   topic: {
     icon: Layers,
     bg: "bg-violet-50",
     iconClass: "text-violet-500",
-    label: "Topic",
+    label: "Topik",
   },
   flashcard: {
     icon: CreditCard,
@@ -24,7 +30,19 @@ const typeConfig: Record<
     icon: FileText,
     bg: "bg-blue-50",
     iconClass: "text-blue-500",
-    label: "Summary",
+    label: "Ringkasan",
+  },
+  section: {
+    icon: FileText,
+    bg: "bg-emerald-50",
+    iconClass: "text-emerald-500",
+    label: "Bagian",
+  },
+  text: {
+    icon: Bookmark,
+    bg: "bg-neutral-100",
+    iconClass: "text-neutral-600",
+    label: "Sorotan",
   },
 };
 
@@ -95,15 +113,15 @@ export function QuickBookmarks({ items, onItemClick, onViewAll }: QuickBookmarks
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <Bookmark className="h-3.5 w-3.5 text-neutral-400" />
-          <h2 className="text-sm font-semibold text-neutral-800">Bookmarks</h2>
+          <h2 className="text-sm font-semibold text-neutral-800">Bookmark</h2>
         </div>
-        {items.length > 3 && (
+        {items.length > 0 && (
           <button
             type="button"
             onClick={onViewAll}
             className="text-xs font-medium text-blue-500 hover:text-blue-700 transition-colors"
           >
-            View all
+            Lihat semua
           </button>
         )}
       </div>

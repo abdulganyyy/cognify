@@ -27,26 +27,6 @@ export interface DocumentDetailHeaderProps {
   className?: string
 }
 
-function getStatusMeta(status: DocumentDetailStatus): {
-  label: string
-  variant: "default" | "success" | "warning" | "danger" | "info"
-} {
-  switch (status) {
-    case "draft":
-      return { label: "Draft", variant: "default" }
-    case "uploaded":
-      return { label: "Uploaded", variant: "info" }
-    case "processing":
-      return { label: "Processing", variant: "warning" }
-    case "ready":
-      return { label: "Ready", variant: "success" }
-    case "failed":
-      return { label: "Failed", variant: "danger" }
-    default:
-      return { label: "Unknown", variant: "default" }
-  }
-}
-
 export function DocumentDetailHeader({
   title,
   description,
@@ -60,8 +40,6 @@ export function DocumentDetailHeader({
   actions,
   className,
 }: DocumentDetailHeaderProps) {
-  const statusMeta = getStatusMeta(status)
-
   return (
     <div
       className={cn(
@@ -86,7 +64,7 @@ export function DocumentDetailHeader({
 
           <div className="min-w-0 space-y-3">
             <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge label={statusMeta.label} status={statusMeta.variant} />
+              <StatusBadge status={status} />
             </div>
 
             <div className="space-y-2">
@@ -102,8 +80,8 @@ export function DocumentDetailHeader({
             </div>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-              {updatedAt ? <span>Updated {updatedAt}</span> : null}
-              {typeof pageCount === "number" ? <span>{pageCount} pages</span> : null}
+              {updatedAt ? <span>Diperbarui {updatedAt}</span> : null}
+              {typeof pageCount === "number" ? <span>{pageCount} halaman</span> : null}
             </div>
           </div>
         </div>
@@ -111,8 +89,8 @@ export function DocumentDetailHeader({
         <div className="flex shrink-0 items-center gap-2">
           <BookmarkButton
             size="md"
-            bookmarked={bookmarked}
-            onClick={onBookmarkToggle}
+            isBookmarked={bookmarked}
+            onToggle={onBookmarkToggle ? () => onBookmarkToggle() : undefined}
           />
           {actions}
         </div>
